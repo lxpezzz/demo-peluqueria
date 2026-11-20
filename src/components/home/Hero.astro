@@ -1,0 +1,535 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowLeft, ArrowRight } from 'lucide-astro';
+import { BRAND, HERO_MEDIA, HERO_SLIDES } from '../../data/studio';
+
+const totalSlides = String(HERO_SLIDES.length).padStart(2, '0');
+---
+
+<section class="hero" id="inicio" aria-label="Presentación de MARGEN Hair Studio" data-theme="dark">
+	<span id="hero-sentinel" class="hero__sentinel" aria-hidden="true"></span>
+
+	<div class="hero__media">
+		<Image
+			src={HERO_MEDIA.mainImage}
+			alt={HERO_MEDIA.mainAlt}
+			widths={[640, 960, 1280, 1600]}
+			sizes="(max-width: 960px) 100vw, 60vw"
+			loading="eager"
+			decoding="sync"
+			fetchpriority="high"
+			class="hero__image"
+		/>
+		<div class="hero__scrim" aria-hidden="true"></div>
+
+		<div class="hero__copy">
+			<p class="hero__eyebrow">{BRAND.name} / {BRAND.descriptor}</p>
+			<h1 class="hero__title">
+				<span class="hero__title-line">El estilo</span>
+				<span class="hero__title-line">
+					tiene <em class="editorial-italic">carácter.</em>
+				</span>
+			</h1>
+		</div>
+	</div>
+
+	<div class="hero__panel" data-hero-carousel data-total={HERO_SLIDES.length}>
+		<div class="hero__top">
+			<p class="hero__counter" aria-live="polite" aria-atomic="true">
+				<span data-hero-current>01</span>
+				<span class="hero__counter-sep" aria-hidden="true">—</span>
+				<span>{totalSlides}</span>
+			</p>
+		</div>
+
+		<div class="hero__center">
+			<p class="hero__statement">
+				Tu próxima<br />
+				<em class="editorial-italic">versión.</em>
+			</p>
+
+			<a class="hero__circle-cta" href="/estudio">
+				<span class="hero__circle-label">Descubre<br />el estudio</span>
+			</a>
+		</div>
+
+		<div class="hero__reel" role="region" aria-roledescription="carrusel" aria-label="Escenas del estudio">
+			<div class="hero__reel-frame">
+				{
+					HERO_SLIDES.map((slide, index) => (
+						<figure
+							class:list={['hero__slide', { 'is-active': index === 0 }]}
+							data-hero-slide={index}
+							aria-hidden={index === 0 ? 'false' : 'true'}
+						>
+							<Image
+								src={slide.image}
+								alt={slide.alt}
+								widths={[320, 480]}
+								sizes="(max-width: 960px) 280px, 240px"
+								loading={index === 0 ? 'eager' : 'lazy'}
+								class="hero__slide-img"
+							/>
+						</figure>
+					))
+				}
+			</div>
+
+			<div class="hero__reel-meta">
+				<p class="hero__reel-caption" data-hero-caption>{HERO_SLIDES[0].caption}</p>
+				<p class="hero__reel-note" data-hero-note>{HERO_SLIDES[0].note}</p>
+			</div>
+
+			<div class="hero__reel-controls">
+				<button
+					type="button"
+					class="hero__control-btn"
+					aria-label="Escena anterior"
+					data-hero-prev
+				>
+					<ArrowLeft size={16} stroke-width={1.2} aria-hidden="true" />
+				</button>
+
+				<div class="hero__progress-track" aria-hidden="true">
+					<span class="hero__progress-fill" data-hero-progress></span>
+				</div>
+
+				<button
+					type="button"
+					class="hero__control-btn"
+					aria-label="Escena siguiente"
+					data-hero-next
+				>
+					<ArrowRight size={16} stroke-width={1.2} aria-hidden="true" />
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<script
+		type="application/json"
+		data-hero-slides-json
+		set:html={JSON.stringify(
+			HERO_SLIDES.map((s) => ({ index: s.index, caption: s.caption, note: s.note })),
+		)}
+	/>
+</section>
+
+<style>
+	.hero {
+		position: relative;
+		display: grid;
+		grid-template-columns: minmax(0, 59fr) minmax(0, 41fr);
+		min-height: 100svh;
+		min-height: 100dvh;
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+	}
+
+	.hero__sentinel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 3.5rem;
+		pointer-events: none;
+	}
+
+	/* Left 60% architectural photograph */
+	.hero__media {
+		position: relative;
+		overflow: hidden;
+		min-height: 100svh;
+		min-height: 100dvh;
+		background-color: #1a1918;
+	}
+
+	.hero__image {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 42%;
+		animation: heroImageSettle 1100ms var(--ease-editorial) both;
+	}
+
+	.hero__scrim {
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(to bottom, rgba(34, 33, 32, 0.44) 0%, rgba(34, 33, 32, 0) 24%),
+			linear-gradient(to top, rgba(34, 33, 32, 0.72) 0%, rgba(34, 33, 32, 0.24) 34%, rgba(34, 33, 32, 0) 60%);
+		pointer-events: none;
+	}
+
+	.hero__copy {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		padding: 0 var(--gutter) clamp(2.25rem, 5vh, 4rem);
+		z-index: 2;
+		animation: heroTextRise 850ms var(--ease-editorial) 140ms both;
+	}
+
+	.hero__eyebrow {
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: rgba(248, 247, 244, 0.86);
+		margin-bottom: 1rem;
+	}
+
+	.hero__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-hero);
+		font-weight: 300;
+		line-height: 0.96;
+		letter-spacing: -0.02em;
+		color: var(--color-paper);
+		max-width: 11ch;
+	}
+
+	.hero__title-line {
+		display: block;
+	}
+
+	/* Right 40% editorial charcoal panel */
+	.hero__panel {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+		padding: calc(var(--header-height) + 1.25rem) clamp(1.75rem, 4vw, 3.75rem) clamp(2rem, 4vh, 3rem);
+		background-color: var(--color-charcoal);
+		text-align: center;
+		gap: clamp(2rem, 4vh, 3rem);
+	}
+
+	.hero__top {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+	}
+
+	.hero__counter {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.65rem;
+		font-size: var(--text-label);
+		font-weight: 400;
+		letter-spacing: 0.2em;
+		color: var(--color-stone);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.hero__counter-sep {
+		opacity: 0.6;
+	}
+
+	.hero__center {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: clamp(1.75rem, 3.5vh, 2.75rem);
+		animation: heroTextRise 900ms var(--ease-editorial) 240ms both;
+	}
+
+	.hero__statement {
+		font-family: var(--font-serif);
+		font-size: clamp(2.15rem, 1.5rem + 2vw, 3.5rem);
+		font-weight: 300;
+		line-height: 1.04;
+		letter-spacing: -0.015em;
+		color: var(--color-paper);
+	}
+
+	.hero__circle-cta {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: clamp(11rem, 13.5vw, 13.25rem);
+		height: clamp(11rem, 13.5vw, 13.25rem);
+		border-radius: 50%;
+		border: 1px solid rgba(248, 247, 244, 0.34);
+		color: var(--color-paper);
+		transition:
+			background-color var(--duration-base) var(--ease-editorial),
+			border-color var(--duration-base) var(--ease-editorial),
+			color var(--duration-base) var(--ease-editorial),
+			transform var(--duration-base) var(--ease-editorial);
+	}
+
+	.hero__circle-label {
+		font-size: 0.68rem;
+		font-weight: 500;
+		letter-spacing: 0.2em;
+		line-height: 1.6;
+		text-transform: uppercase;
+		transition: transform var(--duration-base) var(--ease-editorial);
+	}
+
+	.hero__circle-cta:hover,
+	.hero__circle-cta:focus-visible {
+		background-color: var(--color-ivory);
+		border-color: var(--color-ivory);
+		color: var(--color-charcoal);
+		transform: scale(1.03);
+	}
+
+	.hero__circle-cta:hover .hero__circle-label {
+		transform: translateY(-1px);
+	}
+
+	.hero__circle-cta:active {
+		transform: scale(0.98);
+	}
+
+	/* Bottom editorial reel */
+	.hero__reel {
+		width: 100%;
+		max-width: 21rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.9rem;
+	}
+
+	.hero__reel-frame {
+		position: relative;
+		width: min(100%, 14.5rem);
+		aspect-ratio: 16 / 10;
+		overflow: hidden;
+		background-color: #191817;
+	}
+
+	.hero__slide {
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		transform: scale(1.04);
+		transition:
+			opacity var(--duration-base) var(--ease-editorial),
+			transform var(--duration-slow) var(--ease-editorial);
+		pointer-events: none;
+	}
+
+	.hero__slide.is-active {
+		opacity: 1;
+		transform: scale(1);
+		pointer-events: auto;
+	}
+
+	.hero__slide-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 30%;
+	}
+
+	.hero__reel-meta {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		min-height: 3.1rem;
+	}
+
+	.hero__reel-caption {
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-paper);
+	}
+
+	.hero__reel-note {
+		font-size: 0.78rem;
+		line-height: 1.45;
+		color: var(--color-ink-on-dark-muted);
+		max-width: 30ch;
+	}
+
+	.hero__reel-controls {
+		width: 100%;
+		display: grid;
+		grid-template-columns: auto 1fr auto;
+		align-items: center;
+		gap: 1rem;
+		padding-top: 0.25rem;
+	}
+
+	.hero__control-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		color: var(--color-stone);
+		transition:
+			color var(--duration-fast) var(--ease-editorial),
+			transform var(--duration-fast) var(--ease-editorial);
+	}
+
+	.hero__control-btn:hover {
+		color: var(--color-paper);
+	}
+
+	.hero__control-btn[data-hero-prev]:hover {
+		transform: translateX(-2px);
+	}
+
+	.hero__control-btn[data-hero-next]:hover {
+		transform: translateX(2px);
+	}
+
+	.hero__progress-track {
+		position: relative;
+		height: 1px;
+		width: 100%;
+		background-color: rgba(248, 247, 244, 0.22);
+		overflow: hidden;
+	}
+
+	.hero__progress-fill {
+		display: block;
+		width: 100%;
+		height: 100%;
+		background-color: var(--color-paper);
+		transform-origin: left center;
+		transform: scaleX(0.2);
+		transition: transform var(--duration-base) var(--ease-editorial);
+	}
+
+	@keyframes heroImageSettle {
+		from {
+			opacity: 0.85;
+			transform: scale(1.045);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	@keyframes heroTextRise {
+		from {
+			opacity: 0;
+			transform: translateY(18px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* Tablet & Mobile editorial adaptation */
+	@media (max-width: 960px) {
+		.hero {
+			grid-template-columns: 1fr;
+			min-height: auto;
+		}
+
+		.hero__media {
+			min-height: clamp(30rem, 78svh, 44rem);
+		}
+
+		.hero__copy {
+			padding-bottom: clamp(2rem, 5vh, 3rem);
+		}
+
+		.hero__panel {
+			padding: 3.5rem var(--gutter) 4rem;
+			gap: 2.75rem;
+		}
+
+		.hero__circle-cta {
+			width: 10.5rem;
+			height: 10.5rem;
+		}
+
+		.hero__reel {
+			max-width: 24rem;
+		}
+
+		.hero__reel-frame {
+			width: min(100%, 17.5rem);
+		}
+	}
+
+	@media (max-width: 480px) {
+		.hero__media {
+			min-height: 74svh;
+		}
+
+		.hero__title {
+			font-size: clamp(2.65rem, 11vw, 3.4rem);
+		}
+
+		.hero__panel {
+			padding: 3rem var(--gutter) 3.5rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero__image,
+		.hero__copy,
+		.hero__center {
+			animation: none;
+		}
+	}
+</style>
+
+<script>
+	interface SlideMeta {
+		index: string;
+		caption: string;
+		note: string;
+	}
+
+	const initHeroCarousel = () => {
+		const root = document.querySelector<HTMLElement>('[data-hero-carousel]');
+		const dataEl = document.querySelector<HTMLScriptElement>('[data-hero-slides-json]');
+		if (!root || !dataEl?.textContent) return;
+
+		const slidesMeta: SlideMeta[] = JSON.parse(dataEl.textContent);
+		const slideNodes = root.querySelectorAll<HTMLElement>('[data-hero-slide]');
+		const currentEl = root.querySelector<HTMLElement>('[data-hero-current]');
+		const captionEl = root.querySelector<HTMLElement>('[data-hero-caption]');
+		const noteEl = root.querySelector<HTMLElement>('[data-hero-note]');
+		const progressEl = root.querySelector<HTMLElement>('[data-hero-progress]');
+		const prevBtn = root.querySelector<HTMLButtonElement>('[data-hero-prev]');
+		const nextBtn = root.querySelector<HTMLButtonElement>('[data-hero-next]');
+
+		if (!slideNodes.length || !slidesMeta.length) return;
+
+		let activeIndex = 0;
+
+		const render = (nextIndex: number) => {
+			activeIndex = (nextIndex + slidesMeta.length) % slidesMeta.length;
+			const meta = slidesMeta[activeIndex];
+
+			slideNodes.forEach((node, idx) => {
+				const isCurrent = idx === activeIndex;
+				node.classList.toggle('is-active', isCurrent);
+				node.setAttribute('aria-hidden', String(!isCurrent));
+			});
+
+			if (currentEl) currentEl.textContent = meta.index;
+			if (captionEl) captionEl.textContent = meta.caption;
+			if (noteEl) noteEl.textContent = meta.note;
+			if (progressEl) {
+				progressEl.style.transform = `scaleX(${(activeIndex + 1) / slidesMeta.length})`;
+			}
+		};
+
+		prevBtn?.addEventListener('click', () => render(activeIndex - 1));
+		nextBtn?.addEventListener('click', () => render(activeIndex + 1));
+
+		render(0);
+	};
+
+	initHeroCarousel();
+</script>

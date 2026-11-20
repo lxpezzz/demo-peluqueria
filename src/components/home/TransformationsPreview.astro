@@ -1,0 +1,132 @@
+---
+import { ArrowUpRight } from 'lucide-astro';
+import BeforeAfterSlider from '../ui/BeforeAfterSlider.astro';
+import { TRANSFORMATIONS_PAGE } from '../../data/pages';
+
+const featured = TRANSFORMATIONS_PAGE.cases[0];
+const preview = TRANSFORMATIONS_PAGE.homePreview;
+---
+
+<section class="home-ba" id="transformaciones" aria-labelledby="home-ba-heading">
+	<div class="container home-ba__grid">
+		<div class="home-ba__copy" data-reveal>
+			<p class="editorial-label">{preview.label}</p>
+			<h2 class="home-ba__title" id="home-ba-heading">
+				{preview.headingStart}
+				<br />
+				<em class="editorial-italic">{preview.headingEmphasis}</em>
+			</h2>
+			<p class="home-ba__body">{preview.body}</p>
+
+			<div class="home-ba__case-meta">
+				<span class="home-ba__case-tag">{featured.category}</span>
+				<p class="home-ba__case-title">{featured.title}</p>
+				<p class="home-ba__case-service">{featured.serviceNote}</p>
+			</div>
+
+			<a class="editorial-link home-ba__link" href={preview.ctaHref}>
+				<span>{preview.ctaLabel}</span>
+				<ArrowUpRight size={14} stroke-width={1.35} aria-hidden="true" />
+			</a>
+		</div>
+
+		<div class="home-ba__media" data-reveal style="--reveal-delay: 140ms;">
+			<BeforeAfterSlider
+				id="home-featured"
+				beforeImage={featured.beforeImage}
+				beforeAlt={featured.beforeAlt}
+				afterImage={featured.afterImage}
+				afterAlt={featured.afterAlt}
+				label={featured.title}
+				aspectRatio="4 / 5"
+				demoNote="Par demostrativo · Sustituible por fotografía real"
+			/>
+		</div>
+	</div>
+</section>
+
+<style>
+	.home-ba {
+		background-color: var(--color-paper);
+		color: var(--color-charcoal);
+		padding-block: var(--section-pad);
+	}
+
+	.home-ba__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 3vw, 2.5rem);
+		align-items: center;
+	}
+
+	.home-ba__copy {
+		grid-column: 1 / 6;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.5rem;
+	}
+
+	.home-ba__title {
+		font-family: var(--font-serif);
+		font-size: clamp(2.25rem, 1.65rem + 2.6vw, 4rem);
+		font-weight: 300;
+		line-height: 1.05;
+		letter-spacing: -0.02em;
+	}
+
+	.home-ba__body {
+		font-size: var(--text-base);
+		line-height: 1.72;
+		color: var(--color-ink-muted);
+		max-width: 40ch;
+	}
+
+	.home-ba__case-meta {
+		width: 100%;
+		padding-block: 1.25rem;
+		border-top: 1px solid var(--rule-on-light);
+		border-bottom: 1px solid var(--rule-on-light);
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.home-ba__case-tag {
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-terracotta);
+	}
+
+	.home-ba__case-title {
+		font-family: var(--font-serif);
+		font-size: 1.5rem;
+		font-weight: 400;
+		line-height: 1.2;
+	}
+
+	.home-ba__case-service {
+		font-size: var(--text-xs);
+		color: var(--color-ink-muted);
+	}
+
+	.home-ba__link {
+		margin-top: 0.5rem;
+	}
+
+	.home-ba__media {
+		grid-column: 7 / 13;
+	}
+
+	@media (max-width: 960px) {
+		.home-ba__grid {
+			grid-template-columns: 1fr;
+		}
+
+		.home-ba__copy,
+		.home-ba__media {
+			grid-column: 1 / -1;
+		}
+	}
+</style>

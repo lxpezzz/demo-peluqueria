@@ -1,0 +1,247 @@
+---
+import { ArrowUpRight } from 'lucide-astro';
+import { BOOKING_DATA } from '../../data/studio';
+---
+
+<section class="booking" id="contacto" aria-labelledby="booking-heading" data-theme="dark">
+	<div class="container booking__inner">
+		<div class="booking__hero" data-reveal>
+			<p class="editorial-label">{BOOKING_DATA.label}</p>
+			<h2 class="booking__title" id="booking-heading">
+				{BOOKING_DATA.headingStart}{' '}
+				<em class="editorial-italic">{BOOKING_DATA.headingEmphasis}</em>
+			</h2>
+		</div>
+
+		<div class="booking__grid">
+			<div class="booking__action" data-reveal style="--reveal-delay: 100ms;">
+				<p class="booking__body">{BOOKING_DATA.body}</p>
+				<a class="booking__cta" href="/contacto">
+					<span>{BOOKING_DATA.ctaLabel}</span>
+					<span class="booking__cta-icon" aria-hidden="true">
+						<ArrowUpRight size={16} stroke-width={1.25} />
+					</span>
+				</a>
+			</div>
+
+			<aside
+				class="booking__demo"
+				id="contacto-demo"
+				aria-labelledby="demo-contact-heading"
+				data-reveal
+				style="--reveal-delay: 180ms;"
+			>
+				<div class="booking__demo-head">
+					<span class="booking__demo-dot" aria-hidden="true"></span>
+					<h3 class="booking__demo-title" id="demo-contact-heading">
+						{BOOKING_DATA.demoBadge}
+					</h3>
+				</div>
+
+				<p class="booking__demo-text">{BOOKING_DATA.demoExplanation}</p>
+
+				<dl class="booking__demo-list">
+					{
+						BOOKING_DATA.demoDetails.map((item) => (
+							<div class="booking__demo-row">
+								<dt class="booking__demo-term">{item.label}</dt>
+								<dd class="booking__demo-value">{item.value}</dd>
+							</div>
+						))
+					}
+				</dl>
+			</aside>
+		</div>
+	</div>
+</section>
+
+<style>
+	.booking {
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		padding-block: clamp(5.5rem, 11vw, 10.5rem) clamp(4.5rem, 8vw, 7.5rem);
+	}
+
+	.booking__inner {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(3rem, 6vw, 5.5rem);
+	}
+
+	.booking__hero {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		padding-bottom: clamp(2.5rem, 5vw, 4rem);
+		border-bottom: 1px solid var(--rule-on-dark);
+	}
+
+	.booking__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-monument);
+		font-weight: 300;
+		line-height: 0.98;
+		letter-spacing: -0.025em;
+		max-width: 14ch;
+	}
+
+	.booking__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 3vw, 2.5rem);
+		align-items: start;
+	}
+
+	.booking__action {
+		grid-column: 1 / 6;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2.25rem;
+	}
+
+	.booking__body {
+		font-size: var(--text-base);
+		line-height: 1.75;
+		color: var(--color-ink-on-dark-muted);
+		max-width: 40ch;
+	}
+
+	.booking__cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 1.5rem;
+		padding: 0.7rem 0.7rem 0.7rem 1.85rem;
+		border: 1px solid rgba(248, 247, 244, 0.36);
+		border-radius: 999px;
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--color-paper);
+		transition:
+			background-color var(--duration-base) var(--ease-editorial),
+			border-color var(--duration-base) var(--ease-editorial),
+			color var(--duration-base) var(--ease-editorial),
+			transform var(--duration-fast) var(--ease-editorial);
+	}
+
+	.booking__cta-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.65rem;
+		height: 2.65rem;
+		border-radius: 50%;
+		border: 1px solid rgba(248, 247, 244, 0.24);
+		transition:
+			transform var(--duration-base) var(--ease-editorial),
+			border-color var(--duration-base) var(--ease-editorial),
+			background-color var(--duration-base) var(--ease-editorial);
+	}
+
+	.booking__cta:hover,
+	.booking__cta:focus-visible {
+		background-color: var(--color-ivory);
+		border-color: var(--color-ivory);
+		color: var(--color-charcoal);
+	}
+
+	.booking__cta:hover .booking__cta-icon {
+		border-color: rgba(34, 33, 32, 0.22);
+		transform: translate(2px, -2px);
+	}
+
+	.booking__cta:active {
+		transform: scale(0.985);
+	}
+
+	.booking__demo {
+		grid-column: 7 / 13;
+		padding: clamp(1.75rem, 3vw, 2.5rem);
+		border: 1px solid var(--rule-on-dark);
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		scroll-margin-top: 6rem;
+	}
+
+	.booking__demo-head {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.booking__demo-dot {
+		width: 0.45rem;
+		height: 0.45rem;
+		border-radius: 50%;
+		background-color: var(--color-terracotta);
+	}
+
+	.booking__demo-title {
+		font-family: var(--font-sans);
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-paper);
+	}
+
+	.booking__demo-text {
+		font-size: var(--text-xs);
+		line-height: 1.7;
+		color: var(--color-ink-on-dark-muted);
+	}
+
+	.booking__demo-list {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+	}
+
+	.booking__demo-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+		padding-block: 0.85rem;
+		border-top: 1px solid var(--rule-on-dark);
+	}
+
+	.booking__demo-term {
+		font-size: var(--text-label);
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+	}
+
+	.booking__demo-value {
+		margin: 0;
+		font-size: var(--text-xs);
+		color: var(--color-paper);
+		text-align: right;
+	}
+
+	@media (max-width: 900px) {
+		.booking__grid {
+			grid-template-columns: 1fr;
+		}
+
+		.booking__action,
+		.booking__demo {
+			grid-column: 1 / -1;
+		}
+	}
+
+	@media (max-width: 520px) {
+		.booking__demo-row {
+			flex-direction: column;
+			gap: 0.25rem;
+		}
+
+		.booking__demo-value {
+			text-align: left;
+		}
+	}
+</style>

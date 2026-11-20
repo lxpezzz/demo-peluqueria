@@ -1,0 +1,750 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowLeft, ArrowRight, ArrowUpRight, X } from 'lucide-astro';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { LOOKBOOK_PAGE } from '../data/pages';
+---
+
+<Layout title={LOOKBOOK_PAGE.meta.title} description={LOOKBOOK_PAGE.meta.description}>
+	<Header theme="dark" />
+
+	<main id="contenido-principal">
+		{/* Large-scale Editorial Lookbook Hero */}
+		<section class="lb-hero" data-theme="dark">
+			<span id="page-sentinel" class="page-sentinel" aria-hidden="true"></span>
+			<Image
+				src={LOOKBOOK_PAGE.hero.image}
+				alt={LOOKBOOK_PAGE.hero.alt}
+				widths={[640, 1024, 1440, 1800]}
+				sizes="100vw"
+				loading="eager"
+				decoding="sync"
+				fetchpriority="high"
+				class="lb-hero__image"
+			/>
+			<div class="lb-hero__scrim" aria-hidden="true"></div>
+			<div class="container lb-hero__content">
+				<p class="editorial-label">{LOOKBOOK_PAGE.hero.label}</p>
+				<h1 class="lb-hero__title">
+					{LOOKBOOK_PAGE.hero.headingStart}
+					<br />
+					<em class="editorial-italic">{LOOKBOOK_PAGE.hero.headingEmphasis}</em>
+				</h1>
+			</div>
+		</section>
+
+		{/* Asymmetric Fashion Portfolio + Filters */}
+		<section class="lb-gallery-section" aria-label="Galería Lookbook" data-theme="dark">
+			<div class="container">
+				<div class="lb-toolbar">
+					<div class="lb-filters" role="group" aria-label="Filtrar trabajos por categoría">
+						{
+							LOOKBOOK_PAGE.filters.map((filter, idx) => (
+								<button
+									type="button"
+									class:list={['lb-filter-btn', { 'is-active': idx === 0 }]}
+									data-lb-filter={filter.id}
+									aria-pressed={idx === 0 ? 'true' : 'false'}
+								>
+									{filter.label}
+								</button>
+							))
+						}
+					</div>
+					<p class="lb-count" aria-live="polite" data-lb-count>
+						{LOOKBOOK_PAGE.items.length} estudios
+					</p>
+				</div>
+
+				<div class="lb-grid" data-lb-grid>
+					{
+						LOOKBOOK_PAGE.items.map((item, idx) => (
+							<article
+								class:list={['lb-piece', `lb-piece--${item.layout}`, `lb-piece--pos-${idx + 1}`]}
+								data-lb-item
+								data-category={item.category}
+								data-index={idx}
+								data-title={item.title}
+								data-collection={item.collection}
+								data-note={item.note}
+								data-category-label={item.categoryLabel}
+								data-reveal
+							>
+								<button
+									type="button"
+									class="lb-piece__trigger"
+									aria-label={`Ampliar estudio ${item.title} (${item.categoryLabel})`}
+									data-lb-open={idx}
+								>
+									<div class="lb-piece__media">
+										<Image
+											src={item.image}
+											alt={item.alt}
+											widths={[480, 760, 1080]}
+											sizes="(max-width: 768px) 100vw, 48vw"
+											loading="lazy"
+											class="lb-piece__image"
+										/>
+									</div>
+								</button>
+
+								<div class="lb-piece__meta">
+									<div class="lb-piece__top">
+										<span class="lb-piece__num">{item.number}</span>
+										<h2 class="lb-piece__title">{item.title}</h2>
+										<span class="lb-piece__tag">{item.categoryLabel}</span>
+									</div>
+									<p class="lb-piece__collection">{item.collection}</p>
+									<p class="lb-piece__note">{item.note}</p>
+								</div>
+							</article>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		{/* Editorial Bridge to Antes & Después */}
+		<section class="lb-bridge" aria-labelledby="bridge-heading">
+			<div class="container lb-bridge__inner" data-reveal>
+				<div class="lb-bridge__copy">
+					<p class="editorial-label">{LOOKBOOK_PAGE.bridge.label}</p>
+					<h2 class="lb-bridge__title" id="bridge-heading">
+						{LOOKBOOK_PAGE.bridge.headingStart}{' '}
+						<em class="editorial-italic">{LOOKBOOK_PAGE.bridge.headingEmphasis}</em>
+					</h2>
+					<p class="lb-bridge__body">{LOOKBOOK_PAGE.bridge.body}</p>
+				</div>
+
+				<a class="lb-bridge__cta" href={LOOKBOOK_PAGE.bridge.ctaHref}>
+					<span>{LOOKBOOK_PAGE.bridge.ctaLabel}</span>
+					<span class="lb-bridge__cta-icon" aria-hidden="true">
+						<ArrowUpRight size={16} stroke-width={1.25} />
+					</span>
+				</a>
+			</div>
+		</section>
+
+		{/* Accessible Lightbox Dialog */}
+		<dialog class="lb-modal" id="lookbook-modal" aria-label="Vista ampliada del lookbook" data-theme="dark">
+			<div class="lb-modal__shell">
+				<div class="lb-modal__bar">
+					<p class="lb-modal__collection" data-modal-collection></p>
+					<button
+						type="button"
+						class="lb-modal__close"
+						aria-label="Cerrar vista ampliada"
+						data-modal-close
+					>
+						<span>Cerrar</span>
+						<X size={16} stroke-width={1.3} aria-hidden="true" />
+					</button>
+				</div>
+
+				<div class="lb-modal__body">
+					<div class="lb-modal__frame">
+						<img src="" alt="" class="lb-modal__img" data-modal-img />
+					</div>
+					<div class="lb-modal__info">
+						<span class="lb-modal__tag" data-modal-tag></span>
+						<h3 class="lb-modal__title" data-modal-title></h3>
+						<p class="lb-modal__note" data-modal-note></p>
+						<div class="lb-modal__nav">
+							<button type="button" class="lb-modal__nav-btn" aria-label="Imagen anterior" data-modal-prev>
+								<ArrowLeft size={16} stroke-width={1.25} aria-hidden="true" />
+								<span>Anterior</span>
+							</button>
+							<button type="button" class="lb-modal__nav-btn" aria-label="Imagen siguiente" data-modal-next>
+								<span>Siguiente</span>
+								<ArrowRight size={16} stroke-width={1.25} aria-hidden="true" />
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</dialog>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.page-sentinel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 3.5rem;
+		pointer-events: none;
+	}
+
+	.lb-hero {
+		position: relative;
+		min-height: clamp(32rem, 82svh, 54rem);
+		display: flex;
+		align-items: flex-end;
+		overflow: hidden;
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+	}
+
+	.lb-hero__image {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 25%;
+	}
+
+	.lb-hero__scrim {
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(to bottom, rgba(34, 33, 32, 0.5) 0%, rgba(34, 33, 32, 0) 28%),
+			linear-gradient(to top, rgba(34, 33, 32, 0.85) 0%, rgba(34, 33, 32, 0.25) 45%, rgba(34, 33, 32, 0) 75%);
+	}
+
+	.lb-hero__content {
+		position: relative;
+		z-index: 2;
+		padding-block: calc(var(--header-height) + 3rem) clamp(3rem, 6vh, 5rem);
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.lb-hero__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-monument);
+		font-weight: 300;
+		line-height: 0.96;
+		letter-spacing: -0.025em;
+		max-width: 14ch;
+	}
+
+	/* Gallery Section */
+	.lb-gallery-section {
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		padding-block: clamp(3rem, 6vw, 5rem) var(--section-pad);
+	}
+
+	.lb-toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 1.25rem 2rem;
+		padding-bottom: 1.75rem;
+		border-bottom: 1px solid var(--rule-on-dark);
+		margin-bottom: clamp(3rem, 6vw, 5.5rem);
+	}
+
+	.lb-filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.65rem 1.75rem;
+	}
+
+	.lb-filter-btn {
+		position: relative;
+		font-size: var(--text-label);
+		font-weight: 400;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+		padding-block: 0.45rem;
+		transition: color var(--duration-fast) var(--ease-editorial);
+	}
+
+	.lb-filter-btn::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 1px;
+		background-color: var(--color-ivory);
+		transform: scaleX(0);
+		transform-origin: left center;
+		transition: transform var(--duration-fast) var(--ease-editorial);
+	}
+
+	.lb-filter-btn:hover,
+	.lb-filter-btn.is-active {
+		color: var(--color-paper);
+	}
+
+	.lb-filter-btn.is-active::after {
+		transform: scaleX(1);
+	}
+
+	.lb-count {
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+	}
+
+	/* Asymmetric Lookbook Grid */
+	.lb-grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(3.5rem, 6vw, 6.5rem) clamp(1.25rem, 2.5vw, 2.5rem);
+		align-items: start;
+	}
+
+	.lb-piece {
+		display: flex;
+		flex-direction: column;
+		gap: 1.1rem;
+	}
+
+	.lb-piece[hidden] {
+		display: none;
+	}
+
+	.lb-piece--pos-1 {
+		grid-column: 1 / 7;
+	}
+
+	.lb-piece--pos-2 {
+		grid-column: 8 / 13;
+		margin-top: clamp(2.5rem, 8vw, 8rem);
+	}
+
+	.lb-piece--pos-3 {
+		grid-column: 2 / 6;
+	}
+
+	.lb-piece--pos-4 {
+		grid-column: 7 / 12;
+		margin-top: clamp(1rem, 4vw, 4rem);
+	}
+
+	.lb-piece--pos-5 {
+		grid-column: 1 / 6;
+	}
+
+	.lb-piece--pos-6 {
+		grid-column: 7 / 13;
+		margin-top: clamp(2rem, 6vw, 6rem);
+	}
+
+	.lb-piece--pos-7 {
+		grid-column: 2 / 11;
+	}
+
+	.lb-grid.is-filtered .lb-piece {
+		grid-column: span 6;
+		margin-top: 0;
+	}
+
+	.lb-piece__trigger {
+		display: block;
+		width: 100%;
+		text-align: left;
+	}
+
+	.lb-piece__media {
+		overflow: hidden;
+		background-color: #191817;
+	}
+
+	.lb-piece--tall .lb-piece__media {
+		aspect-ratio: 3 / 4;
+	}
+
+	.lb-piece--wide .lb-piece__media {
+		aspect-ratio: 16 / 10;
+	}
+
+	.lb-piece--portrait .lb-piece__media {
+		aspect-ratio: 4 / 5;
+	}
+
+	.lb-piece--square .lb-piece__media {
+		aspect-ratio: 1 / 1;
+	}
+
+	.lb-piece__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 22%;
+		transition: transform var(--duration-slow) var(--ease-editorial);
+	}
+
+	.lb-piece__trigger:hover .lb-piece__image,
+	.lb-piece__trigger:focus-visible .lb-piece__image {
+		transform: scale(1.035);
+	}
+
+	.lb-piece__meta {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		padding-top: 0.85rem;
+		border-top: 1px solid var(--rule-on-dark);
+	}
+
+	.lb-piece__top {
+		display: flex;
+		align-items: baseline;
+		gap: 0.85rem;
+	}
+
+	.lb-piece__num {
+		font-family: var(--font-serif);
+		font-style: italic;
+		color: var(--color-stone);
+	}
+
+	.lb-piece__title {
+		font-family: var(--font-serif);
+		font-size: clamp(1.5rem, 1.25rem + 0.7vw, 2rem);
+		font-weight: 300;
+		line-height: 1.1;
+	}
+
+	.lb-piece__tag {
+		margin-left: auto;
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+	}
+
+	.lb-piece__collection {
+		font-size: 0.7rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+	}
+
+	.lb-piece__note {
+		font-size: var(--text-xs);
+		line-height: 1.65;
+		color: var(--color-ink-on-dark-muted);
+		max-width: 44ch;
+	}
+
+	/* Bridge to Antes & Después */
+	.lb-bridge {
+		background-color: var(--color-ivory);
+		color: var(--color-charcoal);
+		padding-block: clamp(5rem, 9vw, 8.5rem);
+	}
+
+	.lb-bridge__inner {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 2.5rem 4rem;
+	}
+
+	.lb-bridge__copy {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+		max-width: 42rem;
+	}
+
+	.lb-bridge__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-h2);
+		font-weight: 300;
+		line-height: 1.04;
+	}
+
+	.lb-bridge__body {
+		font-size: var(--text-base);
+		line-height: 1.72;
+		color: var(--color-ink-muted);
+		max-width: 46ch;
+	}
+
+	.lb-bridge__cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 1.5rem;
+		padding: 0.7rem 0.7rem 0.7rem 1.85rem;
+		border: 1px solid rgba(34, 33, 32, 0.32);
+		border-radius: 999px;
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-charcoal);
+		transition:
+			background-color var(--duration-base) var(--ease-editorial),
+			border-color var(--duration-base) var(--ease-editorial),
+			color var(--duration-base) var(--ease-editorial);
+	}
+
+	.lb-bridge__cta-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.65rem;
+		height: 2.65rem;
+		border-radius: 50%;
+		border: 1px solid rgba(34, 33, 32, 0.22);
+		transition: transform var(--duration-base) var(--ease-editorial);
+	}
+
+	.lb-bridge__cta:hover {
+		background-color: var(--color-charcoal);
+		border-color: var(--color-charcoal);
+		color: var(--color-paper);
+	}
+
+	.lb-bridge__cta:hover .lb-bridge__cta-icon {
+		border-color: rgba(248, 247, 244, 0.28);
+		transform: translate(2px, -2px);
+	}
+
+	/* Lightbox Modal */
+	.lb-modal {
+		width: min(94vw, 1180px);
+		max-height: 92dvh;
+		padding: 0;
+		border: 1px solid var(--rule-on-dark);
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		overflow: auto;
+	}
+
+	.lb-modal::backdrop {
+		background-color: rgba(18, 17, 16, 0.86);
+	}
+
+	.lb-modal__shell {
+		padding: clamp(1.25rem, 3vw, 2.25rem);
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.lb-modal__bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-bottom: 1rem;
+		border-bottom: 1px solid var(--rule-on-dark);
+	}
+
+	.lb-modal__collection {
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+	}
+
+	.lb-modal__close {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-paper);
+	}
+
+	.lb-modal__body {
+		display: grid;
+		grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.75fr);
+		gap: clamp(1.5rem, 3vw, 3rem);
+		align-items: center;
+	}
+
+	.lb-modal__frame {
+		background-color: #181716;
+		max-height: 70dvh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+	}
+
+	.lb-modal__img {
+		max-height: 70dvh;
+		width: auto;
+		max-width: 100%;
+		object-fit: contain;
+	}
+
+	.lb-modal__info {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.lb-modal__tag {
+		font-size: var(--text-label);
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+	}
+
+	.lb-modal__title {
+		font-family: var(--font-serif);
+		font-size: clamp(2rem, 3vw, 3rem);
+		font-weight: 300;
+		line-height: 1.05;
+	}
+
+	.lb-modal__note {
+		font-size: var(--text-sm);
+		line-height: 1.7;
+		color: var(--color-ink-on-dark-muted);
+	}
+
+	.lb-modal__nav {
+		display: flex;
+		gap: 1rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--rule-on-dark);
+		margin-top: 0.5rem;
+	}
+
+	.lb-modal__nav-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.55rem;
+		padding: 0.65rem 1rem;
+		border: 1px solid var(--rule-on-dark);
+		font-size: var(--text-label);
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		transition: background-color var(--duration-fast) var(--ease-editorial);
+	}
+
+	.lb-modal__nav-btn:hover {
+		background-color: rgba(248, 247, 244, 0.08);
+	}
+
+	@media (max-width: 900px) {
+		.lb-grid,
+		.lb-grid.is-filtered {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 3rem 1.75rem;
+		}
+
+		.lb-piece,
+		.lb-grid.is-filtered .lb-piece {
+			grid-column: auto;
+			margin-top: 0;
+		}
+
+		.lb-modal__body {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.lb-grid,
+		.lb-grid.is-filtered {
+			grid-template-columns: 1fr;
+			gap: 3.25rem;
+		}
+	}
+</style>
+
+<script>
+	const initLookbook = () => {
+		const grid = document.querySelector<HTMLElement>('[data-lb-grid]');
+		const items = Array.from(document.querySelectorAll<HTMLElement>('[data-lb-item]'));
+		const filterBtns = document.querySelectorAll<HTMLButtonElement>('[data-lb-filter]');
+		const countEl = document.querySelector<HTMLElement>('[data-lb-count]');
+
+		const modal = document.getElementById('lookbook-modal') as HTMLDialogElement | null;
+		const modalImg = modal?.querySelector<HTMLImageElement>('[data-modal-img]');
+		const modalTitle = modal?.querySelector<HTMLElement>('[data-modal-title]');
+		const modalTag = modal?.querySelector<HTMLElement>('[data-modal-tag]');
+		const modalNote = modal?.querySelector<HTMLElement>('[data-modal-note]');
+		const modalCollection = modal?.querySelector<HTMLElement>('[data-modal-collection]');
+		const closeBtn = modal?.querySelector<HTMLButtonElement>('[data-modal-close]');
+		const prevBtn = modal?.querySelector<HTMLButtonElement>('[data-modal-prev]');
+		const nextBtn = modal?.querySelector<HTMLButtonElement>('[data-modal-next]');
+
+		let visibleItems = items;
+		let currentIdx = 0;
+
+		const applyFilter = (category: string) => {
+			visibleItems = [];
+			items.forEach((item) => {
+				const match = category === 'todos' || item.dataset.category === category;
+				item.hidden = !match;
+				if (match) visibleItems.push(item);
+			});
+
+			grid?.classList.toggle('is-filtered', category !== 'todos');
+			filterBtns.forEach((btn) => {
+				const active = btn.dataset.lbFilter === category;
+				btn.classList.toggle('is-active', active);
+				btn.setAttribute('aria-pressed', String(active));
+			});
+
+			if (countEl) {
+				const n = visibleItems.length;
+				countEl.textContent = `${n} ${n === 1 ? 'estudio' : 'estudios'}`;
+			}
+		};
+
+		filterBtns.forEach((btn) => {
+			btn.addEventListener('click', () => {
+				applyFilter(btn.dataset.lbFilter ?? 'todos');
+			});
+		});
+
+		const renderModal = (idx: number) => {
+			if (!visibleItems.length || !modal) return;
+			currentIdx = (idx + visibleItems.length) % visibleItems.length;
+			const item = visibleItems[currentIdx];
+			const img = item.querySelector<HTMLImageElement>('img');
+			if (modalImg && img) {
+				modalImg.src = img.currentSrc || img.src;
+				modalImg.alt = img.alt;
+			}
+			if (modalTitle) modalTitle.textContent = item.dataset.title ?? '';
+			if (modalTag) modalTag.textContent = item.dataset.categoryLabel ?? '';
+			if (modalNote) modalNote.textContent = item.dataset.note ?? '';
+			if (modalCollection) modalCollection.textContent = item.dataset.collection ?? '';
+		};
+
+		items.forEach((item) => {
+			const openBtn = item.querySelector<HTMLButtonElement>('[data-lb-open]');
+			openBtn?.addEventListener('click', () => {
+				const idxInVisible = visibleItems.indexOf(item);
+				renderModal(idxInVisible >= 0 ? idxInVisible : 0);
+				modal?.showModal();
+			});
+		});
+
+		closeBtn?.addEventListener('click', () => modal?.close());
+		prevBtn?.addEventListener('click', () => renderModal(currentIdx - 1));
+		nextBtn?.addEventListener('click', () => renderModal(currentIdx + 1));
+
+		modal?.addEventListener('click', (event) => {
+			if (event.target === modal) modal.close();
+		});
+
+		modal?.addEventListener('keydown', (event) => {
+			if (event.key === 'ArrowLeft') {
+				event.preventDefault();
+				renderModal(currentIdx - 1);
+			} else if (event.key === 'ArrowRight') {
+				event.preventDefault();
+				renderModal(currentIdx + 1);
+			}
+		});
+	};
+
+	initLookbook();
+</script>

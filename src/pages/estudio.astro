@@ -1,0 +1,592 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import PageCta from '../components/ui/PageCta.astro';
+import { STUDIO_PAGE } from '../data/pages';
+---
+
+<Layout title={STUDIO_PAGE.meta.title} description={STUDIO_PAGE.meta.description}>
+	<Header theme="dark" />
+
+	<main id="contenido-principal">
+		{/* Architectural Hero */}
+		<section class="studio-hero" data-theme="dark">
+			<span id="page-sentinel" class="page-sentinel" aria-hidden="true"></span>
+			<Image
+				src={STUDIO_PAGE.hero.image}
+				alt={STUDIO_PAGE.hero.alt}
+				widths={[640, 1024, 1440, 1800]}
+				sizes="100vw"
+				loading="eager"
+				decoding="sync"
+				fetchpriority="high"
+				class="studio-hero__image"
+			/>
+			<div class="studio-hero__scrim" aria-hidden="true"></div>
+			<div class="container studio-hero__content">
+				<p class="editorial-label">{STUDIO_PAGE.hero.label}</p>
+				<h1 class="studio-hero__title">
+					{STUDIO_PAGE.hero.headingStart}{' '}
+					<em class="editorial-italic">{STUDIO_PAGE.hero.headingEmphasis}</em>
+				</h1>
+			</div>
+		</section>
+
+		{/* Nuestra historia */}
+		<section class="studio-story">
+			<div class="container studio-story__grid">
+				<div class="studio-story__left" data-reveal>
+					<p class="editorial-label">{STUDIO_PAGE.story.label}</p>
+					<p class="studio-story__lead">{STUDIO_PAGE.story.lead}</p>
+				</div>
+				<div class="studio-story__right" data-reveal style="--reveal-delay: 120ms;">
+					<div class="studio-story__rule" aria-hidden="true"></div>
+					{
+						STUDIO_PAGE.story.paragraphs.map((paragraph) => (
+							<p class="studio-story__text">{paragraph}</p>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		{/* El espacio — Architectural spread */}
+		<section class="studio-space" aria-labelledby="space-heading">
+			<div class="container">
+				<header class="studio-space__header" data-reveal>
+					<div>
+						<p class="editorial-label">{STUDIO_PAGE.space.label}</p>
+						<h2 class="studio-space__title" id="space-heading">
+							{STUDIO_PAGE.space.heading}
+						</h2>
+					</div>
+					<p class="studio-space__caption">{STUDIO_PAGE.space.caption}</p>
+				</header>
+
+				<div class="studio-space__gallery">
+					{
+						STUDIO_PAGE.space.images.map((item, idx) => (
+							<figure
+								class:list={['space-frame', `space-frame--${idx + 1}`]}
+								data-reveal
+								style={`--reveal-delay: ${idx * 100}ms;`}
+							>
+								<div class="space-frame__media">
+									<Image
+										src={item.image}
+										alt={item.alt}
+										widths={[480, 900, 1360]}
+										sizes="(max-width: 820px) 100vw, 55vw"
+										loading="lazy"
+										class="space-frame__image"
+									/>
+								</div>
+								<figcaption class="space-frame__note">{item.note}</figcaption>
+							</figure>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		{/* Las personas — Provisional demo roles */}
+		<section class="studio-people" aria-labelledby="people-heading" data-theme="dark">
+			<div class="container">
+				<header class="studio-people__header" data-reveal>
+					<div class="studio-people__title-wrap">
+						<p class="editorial-label">{STUDIO_PAGE.people.label}</p>
+						<h2 class="studio-people__title" id="people-heading">
+							{STUDIO_PAGE.people.headingStart}{' '}
+							<em class="editorial-italic">{STUDIO_PAGE.people.headingEmphasis}</em>
+						</h2>
+					</div>
+					<p class="studio-people__notice">{STUDIO_PAGE.people.notice}</p>
+				</header>
+
+				<ol class="studio-people__grid">
+					{
+						STUDIO_PAGE.people.roles.map((member, index) => (
+							<li
+								class="person-card"
+								data-reveal
+								style={`--reveal-delay: ${index * 110}ms;`}
+							>
+								<div class="person-card__media">
+									<Image
+										src={member.image}
+										alt={member.alt}
+										widths={[420, 680]}
+										sizes="(max-width: 768px) 100vw, 30vw"
+										loading="lazy"
+										class="person-card__image"
+									/>
+								</div>
+								<div class="person-card__meta">
+									<span class="person-card__code">{member.code} · Perfil provisional</span>
+									<h3 class="person-card__role">{member.role}</h3>
+									<p class="person-card__bio">{member.bio}</p>
+								</div>
+							</li>
+						))
+					}
+				</ol>
+			</div>
+		</section>
+
+		{/* Nuestra forma de trabajar */}
+		<section class="studio-process" aria-labelledby="process-heading">
+			<div class="container studio-process__layout">
+				<div class="studio-process__intro" data-reveal>
+					<p class="editorial-label">{STUDIO_PAGE.process.label}</p>
+					<h2 class="studio-process__title" id="process-heading">
+						{STUDIO_PAGE.process.headingStart}{' '}
+						<em class="editorial-italic">{STUDIO_PAGE.process.headingEmphasis}</em>
+					</h2>
+				</div>
+
+				<ol class="studio-process__list">
+					{
+						STUDIO_PAGE.process.steps.map((step, index) => (
+							<li
+								class="process-step"
+								data-reveal
+								style={`--reveal-delay: ${index * 80}ms;`}
+							>
+								<span class="process-step__num">{step.number}</span>
+								<div class="process-step__body">
+									<h3 class="process-step__title">{step.title}</h3>
+									<p class="process-step__text">{step.text}</p>
+								</div>
+							</li>
+						))
+					}
+				</ol>
+			</div>
+		</section>
+
+		<PageCta
+			label="VISITA EL ESTUDIO"
+			headingStart="Reserva tu momento en"
+			headingEmphasis="MARGEN."
+			ctaLabel="Solicitar cita"
+			ctaHref="/contacto"
+		/>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.page-sentinel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 3.5rem;
+		pointer-events: none;
+	}
+
+	.studio-hero {
+		position: relative;
+		min-height: clamp(32rem, 84svh, 56rem);
+		display: flex;
+		align-items: flex-end;
+		overflow: hidden;
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+	}
+
+	.studio-hero__image {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 45%;
+	}
+
+	.studio-hero__scrim {
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(to bottom, rgba(34, 33, 32, 0.5) 0%, rgba(34, 33, 32, 0) 28%),
+			linear-gradient(to top, rgba(34, 33, 32, 0.78) 0%, rgba(34, 33, 32, 0.18) 45%, rgba(34, 33, 32, 0) 75%);
+	}
+
+	.studio-hero__content {
+		position: relative;
+		z-index: 2;
+		padding-block: calc(var(--header-height) + 3rem) clamp(3rem, 6vh, 5rem);
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.studio-hero__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-monument);
+		font-weight: 300;
+		line-height: 0.96;
+		letter-spacing: -0.025em;
+		max-width: 12ch;
+	}
+
+	/* Historia */
+	.studio-story {
+		background-color: var(--color-ivory);
+		color: var(--color-charcoal);
+		padding-block: var(--section-pad);
+	}
+
+	.studio-story__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 3vw, 2.5rem);
+		align-items: start;
+	}
+
+	.studio-story__left {
+		grid-column: 1 / 7;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.studio-story__lead {
+		font-family: var(--font-serif);
+		font-size: clamp(1.75rem, 1.35rem + 1.5vw, 2.75rem);
+		font-weight: 300;
+		line-height: 1.24;
+		letter-spacing: -0.015em;
+	}
+
+	.studio-story__right {
+		grid-column: 8 / 13;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		padding-top: clamp(0.5rem, 3vw, 2.5rem);
+	}
+
+	.studio-story__rule {
+		width: 3.5rem;
+		height: 1px;
+		background-color: var(--color-terracotta);
+	}
+
+	.studio-story__text {
+		font-size: var(--text-base);
+		line-height: 1.78;
+		color: var(--color-ink-muted);
+	}
+
+	/* El espacio */
+	.studio-space {
+		background-color: var(--color-paper);
+		color: var(--color-charcoal);
+		padding-block: var(--section-pad);
+	}
+
+	.studio-space__header {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 1.5rem 2.5rem;
+		margin-bottom: clamp(3rem, 6vw, 5rem);
+		padding-bottom: 2rem;
+		border-bottom: 1px solid var(--rule-on-light);
+	}
+
+	.studio-space__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-h2);
+		font-weight: 300;
+		line-height: 1.04;
+		margin-top: 1rem;
+	}
+
+	.studio-space__caption {
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-ink-muted);
+		max-width: 34ch;
+	}
+
+	.studio-space__gallery {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(2.5rem, 5vw, 4.5rem) clamp(1.25rem, 2.5vw, 2.5rem);
+		align-items: start;
+	}
+
+	.space-frame {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+	}
+
+	.space-frame--1 {
+		grid-column: 1 / 8;
+	}
+
+	.space-frame--2 {
+		grid-column: 9 / 13;
+		margin-top: clamp(2rem, 6vw, 6rem);
+	}
+
+	.space-frame--3 {
+		grid-column: 3 / 12;
+	}
+
+	.space-frame__media {
+		overflow: hidden;
+		background-color: var(--color-ivory);
+	}
+
+	.space-frame--1 .space-frame__media {
+		aspect-ratio: 16 / 10;
+	}
+
+	.space-frame--2 .space-frame__media {
+		aspect-ratio: 3 / 4;
+	}
+
+	.space-frame--3 .space-frame__media {
+		aspect-ratio: 16 / 9;
+	}
+
+	.space-frame__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform var(--duration-slow) var(--ease-editorial);
+	}
+
+	.space-frame:hover .space-frame__image {
+		transform: scale(1.03);
+	}
+
+	.space-frame__note {
+		font-size: var(--text-label);
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-ink-muted);
+	}
+
+	/* Las personas */
+	.studio-people {
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		padding-block: var(--section-pad);
+	}
+
+	.studio-people__header {
+		display: grid;
+		grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+		align-items: end;
+		gap: 2rem;
+		padding-bottom: 2.5rem;
+		border-bottom: 1px solid var(--rule-on-dark);
+		margin-bottom: clamp(3rem, 6vw, 5rem);
+	}
+
+	.studio-people__title-wrap {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.studio-people__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-h2);
+		font-weight: 300;
+		line-height: 1.04;
+	}
+
+	.studio-people__notice {
+		font-size: var(--text-xs);
+		line-height: 1.68;
+		color: var(--color-stone);
+		max-width: 40ch;
+		justify-self: end;
+	}
+
+	.studio-people__grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: clamp(2rem, 3.5vw, 3.25rem);
+	}
+
+	.person-card {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.person-card__media {
+		overflow: hidden;
+		aspect-ratio: 3 / 4;
+		background-color: #191817;
+	}
+
+	.person-card__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 20%;
+		transition: transform var(--duration-slow) var(--ease-editorial);
+	}
+
+	.person-card:hover .person-card__image {
+		transform: scale(1.03);
+	}
+
+	.person-card__meta {
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+		padding-top: 0.9rem;
+		border-top: 1px solid var(--rule-on-dark);
+	}
+
+	.person-card__code {
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+	}
+
+	.person-card__role {
+		font-family: var(--font-serif);
+		font-size: var(--text-h3);
+		font-weight: 300;
+		line-height: 1.15;
+	}
+
+	.person-card__bio {
+		font-size: var(--text-xs);
+		line-height: 1.7;
+		color: var(--color-ink-on-dark-muted);
+	}
+
+	/* Nuestra forma de trabajar */
+	.studio-process {
+		background-color: var(--color-ivory);
+		color: var(--color-charcoal);
+		padding-block: var(--section-pad);
+	}
+
+	.studio-process__layout {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 3vw, 2.5rem);
+		align-items: start;
+	}
+
+	.studio-process__intro {
+		grid-column: 1 / 6;
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+		position: sticky;
+		top: calc(var(--header-height) + 2rem);
+	}
+
+	.studio-process__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-h2);
+		font-weight: 300;
+		line-height: 1.04;
+	}
+
+	.studio-process__list {
+		grid-column: 7 / 13;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.process-step {
+		display: grid;
+		grid-template-columns: 3.5rem 1fr;
+		gap: 1.25rem;
+		padding-block: clamp(1.5rem, 3vw, 2.25rem);
+		border-top: 1px solid var(--rule-on-light);
+	}
+
+	.process-step:last-child {
+		border-bottom: 1px solid var(--rule-on-light);
+	}
+
+	.process-step__num {
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: 1.35rem;
+		color: var(--color-terracotta);
+	}
+
+	.process-step__body {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.process-step__title {
+		font-family: var(--font-serif);
+		font-size: clamp(1.45rem, 1.2rem + 0.7vw, 1.9rem);
+		font-weight: 400;
+		line-height: 1.2;
+	}
+
+	.process-step__text {
+		font-size: var(--text-sm);
+		line-height: 1.72;
+		color: var(--color-ink-muted);
+		max-width: 46ch;
+	}
+
+	@media (max-width: 960px) {
+		.studio-story__left,
+		.studio-story__right,
+		.space-frame--1,
+		.space-frame--2,
+		.space-frame--3,
+		.studio-process__intro,
+		.studio-process__list {
+			grid-column: 1 / -1;
+		}
+
+		.space-frame--2 {
+			margin-top: 0;
+		}
+
+		.studio-people__header {
+			grid-template-columns: 1fr;
+		}
+
+		.studio-people__notice {
+			justify-self: start;
+		}
+
+		.studio-people__grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.studio-process__intro {
+			position: static;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.studio-people__grid {
+			grid-template-columns: 1fr;
+		}
+
+		.process-step {
+			grid-template-columns: 2.5rem 1fr;
+		}
+	}
+</style>

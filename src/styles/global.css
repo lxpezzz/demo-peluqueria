@@ -1,0 +1,205 @@
+/* Global reset, editorial typography and shared utilities */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+	background-color: var(--color-charcoal);
+	color: var(--color-charcoal);
+	font-family: var(--font-sans);
+	font-size: 16px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+}
+
+body {
+	margin: 0;
+	background-color: var(--color-paper);
+	color: var(--color-charcoal);
+	line-height: 1.6;
+	overflow-x: clip;
+}
+
+img,
+picture,
+svg {
+	display: block;
+	max-width: 100%;
+}
+
+img {
+	height: auto;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+button {
+	font: inherit;
+	color: inherit;
+	background: none;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+}
+
+ul,
+ol {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote {
+	margin: 0;
+}
+
+/* Focus visibility on both light and dark surfaces */
+:focus-visible {
+	outline: 1.5px solid var(--color-terracotta);
+	outline-offset: 4px;
+}
+
+[data-theme='dark'] :focus-visible {
+	outline-color: var(--color-ivory);
+}
+
+/* Skip link */
+.skip-link {
+	position: fixed;
+	top: -100%;
+	left: var(--gutter);
+	z-index: 100;
+	padding: 0.75rem 1.25rem;
+	background-color: var(--color-charcoal);
+	color: var(--color-paper);
+	font-size: var(--text-xs);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.skip-link:focus {
+	top: 1rem;
+}
+
+/* Shared container */
+.container {
+	width: 100%;
+	max-width: var(--container-max);
+	margin-inline: auto;
+	padding-inline: var(--gutter);
+}
+
+/* Editorial label */
+.editorial-label {
+	display: inline-block;
+	font-family: var(--font-sans);
+	font-size: var(--text-label);
+	font-weight: 500;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--color-ink-muted);
+}
+
+[data-theme='dark'] .editorial-label {
+	color: var(--color-stone);
+}
+
+/* Expressive editorial italic inside serif headings */
+.editorial-italic {
+	font-family: var(--font-serif);
+	font-style: italic;
+	font-weight: 300;
+	letter-spacing: -0.01em;
+}
+
+/* Editorial underline link */
+.editorial-link {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: var(--text-label);
+	font-weight: 500;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	padding-bottom: 0.35rem;
+}
+
+.editorial-link::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 1px;
+	background-color: currentColor;
+	transform-origin: left center;
+	transition: transform var(--duration-fast) var(--ease-editorial), opacity var(--duration-fast) var(--ease-editorial);
+}
+
+.editorial-link:hover::after {
+	transform: scaleX(0.4);
+	opacity: 0.65;
+}
+
+/* Progressive scroll reveal — content stays visible if JS is disabled */
+.js-ready [data-reveal] {
+	opacity: 0;
+	transform: translateY(24px);
+	transition:
+		opacity var(--duration-slow) var(--ease-editorial),
+		transform var(--duration-slow) var(--ease-editorial);
+	transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js-ready [data-reveal='visible'] {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* Screen-reader only */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	.js-ready [data-reveal] {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}

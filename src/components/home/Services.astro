@@ -1,0 +1,224 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowUpRight } from 'lucide-astro';
+import { SERVICES_DATA } from '../../data/studio';
+---
+
+<section class="services" id="servicios" aria-labelledby="services-heading">
+	<div class="container">
+		<header class="services__header" data-reveal>
+			<div class="services__title-wrap">
+				<p class="editorial-label">{SERVICES_DATA.label}</p>
+				<h2 class="services__title" id="services-heading">
+					{SERVICES_DATA.headingStart}{' '}
+					<em class="editorial-italic">{SERVICES_DATA.headingEmphasis}</em>
+				</h2>
+			</div>
+			<div class="services__intro-wrap">
+				<p class="services__intro">
+					Tres disciplinas ejecutadas sin prisa, adaptadas a la textura real y a la identidad de cada persona.
+				</p>
+				<a class="editorial-link" href="/servicios">
+					<span>Ver carta de servicios</span>
+					<ArrowUpRight size={14} stroke-width={1.35} aria-hidden="true" />
+				</a>
+			</div>
+		</header>
+
+		<ol class="services__list">
+			{
+				SERVICES_DATA.items.map((service, index) => (
+					<li
+						class:list={['service-item', `service-item--${index + 1}`]}
+						data-reveal
+						style={`--reveal-delay: ${index * 110}ms;`}
+					>
+						<div class="service-item__meta">
+							<span class="service-item__number" aria-hidden="true">
+								{service.number}
+							</span>
+							<span class="service-item__subtitle">{service.subtitle}</span>
+						</div>
+
+						<div class="service-item__media">
+							<Image
+								src={service.image}
+								alt={service.alt}
+								widths={[420, 680, 920]}
+								sizes="(max-width: 820px) 100vw, 31vw"
+								loading="lazy"
+								class="service-item__image"
+							/>
+						</div>
+
+						<div class="service-item__content">
+							<h3 class="service-item__title">{service.title}</h3>
+							<p class="service-item__description">{service.description}</p>
+						</div>
+					</li>
+				))
+			}
+		</ol>
+	</div>
+</section>
+
+<style>
+	.services {
+		background-color: var(--color-paper);
+		color: var(--color-charcoal);
+		padding-block: var(--section-pad);
+	}
+
+	.services__header {
+		display: grid;
+		grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+		align-items: end;
+		gap: 2rem;
+		padding-bottom: clamp(2.25rem, 4vw, 3.5rem);
+		border-bottom: 1px solid var(--rule-on-light);
+		margin-bottom: clamp(3rem, 6vw, 5rem);
+	}
+
+	.services__title-wrap {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.services__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-h2);
+		font-weight: 300;
+		line-height: 1.02;
+		letter-spacing: -0.02em;
+	}
+
+	.services__intro-wrap {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.25rem;
+		justify-self: end;
+	}
+
+	.services__intro {
+		font-size: var(--text-sm);
+		line-height: 1.7;
+		color: var(--color-ink-muted);
+		max-width: 36ch;
+	}
+
+	.services__list {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: clamp(2rem, 3.5vw, 3.5rem);
+		align-items: start;
+	}
+
+	/* Staggered lookbook rhythm on desktop */
+	.service-item--2 {
+		margin-top: clamp(2.5rem, 5vw, 5rem);
+	}
+
+	.service-item--3 {
+		margin-top: clamp(1rem, 2.5vw, 2.25rem);
+	}
+
+	.service-item {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.service-item__meta {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid var(--rule-on-light);
+	}
+
+	.service-item__number {
+		font-family: var(--font-serif);
+		font-size: clamp(2rem, 2.6vw, 2.75rem);
+		font-weight: 300;
+		line-height: 1;
+		color: var(--color-terracotta);
+	}
+
+	.service-item__subtitle {
+		font-size: var(--text-label);
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: var(--color-ink-muted);
+	}
+
+	.service-item__media {
+		overflow: hidden;
+		aspect-ratio: 3 / 4;
+		background-color: var(--color-ivory);
+	}
+
+	.service-item__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 22%;
+		transition: transform var(--duration-slow) var(--ease-editorial);
+	}
+
+	.service-item:hover .service-item__image {
+		transform: scale(1.035);
+	}
+
+	.service-item__content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.65rem;
+		padding-top: 0.25rem;
+	}
+
+	.service-item__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-h3);
+		font-weight: 400;
+		line-height: 1.15;
+		letter-spacing: -0.01em;
+	}
+
+	.service-item__description {
+		font-size: var(--text-sm);
+		line-height: 1.7;
+		color: var(--color-ink-muted);
+		max-width: 34ch;
+	}
+
+	@media (max-width: 960px) {
+		.services__header {
+			grid-template-columns: 1fr;
+			gap: 1.25rem;
+		}
+
+		.services__intro-wrap {
+			justify-self: start;
+		}
+
+		.services__list {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 3rem 2rem;
+		}
+
+		.service-item--2,
+		.service-item--3 {
+			margin-top: 0;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.services__list {
+			grid-template-columns: 1fr;
+			gap: 3.5rem;
+		}
+	}
+</style>

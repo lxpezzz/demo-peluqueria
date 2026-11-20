@@ -1,0 +1,267 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import PageCta from '../components/ui/PageCta.astro';
+import { MANIFESTO_PAGE } from '../data/pages';
+---
+
+<Layout title={MANIFESTO_PAGE.meta.title} description={MANIFESTO_PAGE.meta.description}>
+	<Header theme="dark" />
+
+	<main id="contenido-principal">
+		{/* Conceptual Charcoal Hero */}
+		<section class="mf-hero" data-theme="dark">
+			<span id="page-sentinel" class="page-sentinel" aria-hidden="true"></span>
+			<div class="container mf-hero__inner">
+				<p class="editorial-label">{MANIFESTO_PAGE.hero.label}</p>
+				<h1 class="mf-hero__title">
+					{MANIFESTO_PAGE.hero.headingStart}
+					<br />
+					<em class="editorial-italic">{MANIFESTO_PAGE.hero.headingEmphasis}</em>
+				</h1>
+				<div class="mf-hero__foot">
+					<span class="mf-hero__rule" aria-hidden="true"></span>
+					<p class="mf-hero__lead">{MANIFESTO_PAGE.hero.lead}</p>
+				</div>
+			</div>
+		</section>
+
+		{/* Four Editorial Principles */}
+		<section class="mf-principles" aria-label="Principios de MARGEN">
+			{
+				MANIFESTO_PAGE.principles.map((item, idx) => (
+					<article
+						class:list={['mf-block', { 'mf-block--alt': idx % 2 === 1 }]}
+					>
+						<div class="container mf-block__grid">
+							<div class="mf-block__copy" data-reveal>
+								<span class="mf-block__num">{item.number}</span>
+								<h2 class="mf-block__title">{item.title}</h2>
+								<p class="mf-block__statement">{item.statement}</p>
+								<p class="mf-block__body">{item.body}</p>
+							</div>
+
+							<div class="mf-block__media" data-reveal style="--reveal-delay: 120ms;">
+								<Image
+									src={item.image}
+									alt={item.alt}
+									widths={[480, 760, 1080]}
+									sizes="(max-width: 900px) 100vw, 44vw"
+									loading="lazy"
+									class="mf-block__image"
+								/>
+							</div>
+						</div>
+					</article>
+				))
+			}
+		</section>
+
+		{/* Monumental Editorial Quote */}
+		<section class="mf-quote" aria-label="Cita principal" data-theme="dark">
+			<div class="container mf-quote__inner" data-reveal>
+				<blockquote class="mf-quote__text">
+					«{MANIFESTO_PAGE.quote.text}»
+				</blockquote>
+				<p class="mf-quote__attr">{MANIFESTO_PAGE.quote.attribution}</p>
+			</div>
+		</section>
+
+		<PageCta
+			label="CONVERSA CON EL ESTUDIO"
+			headingStart="Descubre tu propio"
+			headingEmphasis="margen."
+			ctaLabel="Reservar cita"
+			ctaHref="/contacto"
+		/>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.page-sentinel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 3.5rem;
+		pointer-events: none;
+	}
+
+	.mf-hero {
+		position: relative;
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		min-height: clamp(32rem, 84svh, 54rem);
+		display: flex;
+		align-items: flex-end;
+		padding-block: calc(var(--header-height) + 4rem) clamp(3.5rem, 8vh, 6.5rem);
+	}
+
+	.mf-hero__inner {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(1.75rem, 3.5vw, 3rem);
+	}
+
+	.mf-hero__title {
+		font-family: var(--font-serif);
+		font-size: clamp(3.25rem, 2.2rem + 5.2vw, 7.25rem);
+		font-weight: 300;
+		line-height: 0.94;
+		letter-spacing: -0.025em;
+		max-width: 12ch;
+	}
+
+	.mf-hero__foot {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: 1.5rem;
+		align-items: start;
+		padding-top: 2rem;
+		border-top: 1px solid var(--rule-on-dark);
+	}
+
+	.mf-hero__rule {
+		grid-column: 1 / 4;
+		width: 4.5rem;
+		height: 1px;
+		background-color: var(--color-terracotta);
+		margin-top: 0.7rem;
+	}
+
+	.mf-hero__lead {
+		grid-column: 6 / 12;
+		font-size: var(--text-lead);
+		font-weight: 300;
+		line-height: 1.65;
+		color: var(--color-ink-on-dark-muted);
+	}
+
+	/* Principles */
+	.mf-block {
+		background-color: var(--color-ivory);
+		color: var(--color-charcoal);
+		padding-block: var(--section-pad);
+		border-bottom: 1px solid var(--rule-on-light);
+	}
+
+	.mf-block--alt {
+		background-color: var(--color-paper);
+	}
+
+	.mf-block__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(2.5rem, 5vw, 4.5rem) clamp(1.5rem, 3vw, 2.5rem);
+		align-items: center;
+	}
+
+	.mf-block__copy {
+		grid-column: 1 / 6;
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.mf-block__media {
+		grid-column: 7 / 13;
+		aspect-ratio: 4 / 3;
+		overflow: hidden;
+		background-color: #e4dfd6;
+	}
+
+	.mf-block--alt .mf-block__media {
+		grid-column: 1 / 7;
+		order: 1;
+		aspect-ratio: 4 / 5;
+	}
+
+	.mf-block--alt .mf-block__copy {
+		grid-column: 8 / 13;
+		order: 2;
+	}
+
+	.mf-block__num {
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: clamp(2.25rem, 3.5vw, 3.5rem);
+		line-height: 1;
+		color: var(--color-terracotta);
+	}
+
+	.mf-block__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-h2);
+		font-weight: 300;
+		line-height: 1.04;
+	}
+
+	.mf-block__statement {
+		font-family: var(--font-serif);
+		font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.85rem);
+		font-weight: 400;
+		line-height: 1.38;
+	}
+
+	.mf-block__body {
+		font-size: var(--text-sm);
+		line-height: 1.78;
+		color: var(--color-ink-muted);
+		max-width: 46ch;
+	}
+
+	.mf-block__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 25%;
+	}
+
+	/* Monumental Quote */
+	.mf-quote {
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		padding-block: clamp(6rem, 13vw, 12rem);
+	}
+
+	.mf-quote__inner {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 2.25rem;
+	}
+
+	.mf-quote__text {
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-weight: 300;
+		font-size: clamp(2.1rem, 1.4rem + 3vw, 4.5rem);
+		line-height: 1.14;
+		letter-spacing: -0.015em;
+		max-width: 24ch;
+	}
+
+	.mf-quote__attr {
+		font-size: var(--text-label);
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+	}
+
+	@media (max-width: 960px) {
+		.mf-hero__rule,
+		.mf-hero__lead,
+		.mf-block__copy,
+		.mf-block__media,
+		.mf-block--alt .mf-block__copy,
+		.mf-block--alt .mf-block__media {
+			grid-column: 1 / -1;
+			order: unset;
+		}
+	}
+</style>

@@ -1,0 +1,135 @@
+---
+import { BRAND, NAV_ITEMS } from '../../data/studio';
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<footer class="site-footer" data-theme="dark">
+	<div class="container site-footer__inner">
+		<div class="site-footer__top">
+			<div class="site-footer__identity">
+				<a class="site-footer__brand" href="/">{BRAND.name}</a>
+				<p class="site-footer__tagline">{BRAND.descriptor}</p>
+			</div>
+
+			<nav class="site-footer__nav" aria-label="Navegación del pie de página">
+				<ul class="site-footer__list">
+					{
+						NAV_ITEMS.map((item) => {
+							const active = currentPath === (item.href.replace(/\/$/, '') || '/');
+							return (
+								<li>
+									<a
+										class:list={['site-footer__link', { 'is-active': active }]}
+										href={item.href}
+										aria-current={active ? 'page' : undefined}
+									>
+										{item.label}
+									</a>
+								</li>
+							);
+						})
+					}
+				</ul>
+			</nav>
+		</div>
+
+		<div class="site-footer__bottom">
+			<p class="site-footer__copy">
+				&copy; {BRAND.year} {BRAND.name} — {BRAND.descriptor}. {BRAND.conceptNotice}
+			</p>
+			<p class="site-footer__demo">{BRAND.demoNotice}</p>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		border-top: 1px solid var(--rule-on-dark);
+		padding-block: clamp(3.5rem, 6vw, 5.25rem) clamp(2rem, 4vw, 3rem);
+	}
+
+	.site-footer__inner {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(2.5rem, 5vw, 4rem);
+	}
+
+	.site-footer__top {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 2rem;
+		padding-bottom: clamp(2rem, 4vw, 3rem);
+		border-bottom: 1px solid var(--rule-on-dark);
+	}
+
+	.site-footer__identity {
+		display: flex;
+		flex-direction: column;
+		gap: 0.45rem;
+	}
+
+	.site-footer__brand {
+		font-family: var(--font-sans);
+		font-size: 1.15rem;
+		font-weight: 500;
+		letter-spacing: 0.3em;
+		text-transform: uppercase;
+	}
+
+	.site-footer__tagline {
+		font-size: var(--text-label);
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+	}
+
+	.site-footer__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem 2rem;
+	}
+
+	.site-footer__link {
+		font-size: var(--text-label);
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: var(--color-ink-on-dark-muted);
+		transition: color var(--duration-fast) var(--ease-editorial);
+	}
+
+	.site-footer__link:hover,
+	.site-footer__link.is-active {
+		color: var(--color-paper);
+	}
+
+	.site-footer__bottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 0.75rem 2rem;
+	}
+
+	.site-footer__copy,
+	.site-footer__demo {
+		font-size: var(--text-label);
+		letter-spacing: 0.12em;
+		color: var(--color-stone);
+	}
+
+	.site-footer__demo {
+		text-transform: uppercase;
+		letter-spacing: 0.16em;
+	}
+
+	@media (max-width: 768px) {
+		.site-footer__top {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+	}
+</style>

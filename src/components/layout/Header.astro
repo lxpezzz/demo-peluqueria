@@ -1,0 +1,492 @@
+---
+import { ArrowUpRight } from 'lucide-astro';
+import { BRAND, NAV_ITEMS } from '../../data/studio';
+
+interface Props {
+	theme?: 'dark' | 'light';
+}
+
+const { theme = 'dark' } = Astro.props;
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const isCurrent = (href: string) => {
+	const normalized = href.replace(/\/$/, '') || '/';
+	return currentPath === normalized;
+};
+---
+
+<header
+	class:list={['site-header', `site-header--${theme}`]}
+	data-header
+	data-theme={theme}
+>
+	<div class="site-header__inner">
+		<a
+			class="site-header__brand"
+			href="/"
+			aria-label={`${BRAND.name} — ${BRAND.descriptor}, ir al inicio`}
+		>
+			{BRAND.name}
+		</a>
+
+		<nav class="site-header__nav" aria-label="Navegación principal">
+			<ul class="site-header__list">
+				{
+					NAV_ITEMS.map((item) => {
+						const active = isCurrent(item.href);
+						return (
+							<li>
+								<a
+									class:list={['site-header__link', { 'is-active': active }]}
+									href={item.href}
+									aria-current={active ? 'page' : undefined}
+								>
+									{item.label}
+								</a>
+							</li>
+						);
+					})
+				}
+			</ul>
+		</nav>
+
+		<div class="site-header__actions">
+			<a
+				class:list={['site-header__cta', { 'is-active': isCurrent('/contacto') }]}
+				href="/contacto"
+			>
+				<span>Reservar cita</span>
+			</a>
+
+			<button
+				type="button"
+				class="site-header__toggle"
+				aria-expanded="false"
+				aria-controls="mobile-menu"
+				aria-label="Abrir menú de navegación"
+				data-menu-toggle
+			>
+				<span class="site-header__toggle-line" aria-hidden="true"></span>
+				<span class="site-header__toggle-line" aria-hidden="true"></span>
+			</button>
+		</div>
+	</div>
+</header>
+
+<div class="mobile-drawer" id="mobile-menu" hidden data-menu-drawer data-theme="dark">
+	<div class="mobile-drawer__panel">
+		<div class="mobile-drawer__top">
+			<a class="mobile-drawer__brand" href="/" data-menu-link>
+				{BRAND.name}
+			</a>
+			<button
+				type="button"
+				class="mobile-drawer__close"
+				aria-label="Cerrar menú de navegación"
+				data-menu-close
+			>
+				Cerrar
+			</button>
+		</div>
+
+		<nav class="mobile-drawer__nav" aria-label="Navegación móvil">
+			<ul class="mobile-drawer__list">
+				{
+					NAV_ITEMS.map((item, index) => {
+						const active = isCurrent(item.href);
+						return (
+							<li class="mobile-drawer__item">
+								<a
+									class:list={['mobile-drawer__link', { 'is-active': active }]}
+									href={item.href}
+									aria-current={active ? 'page' : undefined}
+									data-menu-link
+								>
+									<span class="mobile-drawer__index">0{index + 1}</span>
+									<span class="mobile-drawer__text">{item.label}</span>
+								</a>
+							</li>
+						);
+					})
+				}
+			</ul>
+		</nav>
+
+		<div class="mobile-drawer__footer">
+			<a class="mobile-drawer__cta" href="/contacto" data-menu-link>
+				<span>Reservar cita</span>
+				<ArrowUpRight size={15} stroke-width={1.25} aria-hidden="true" />
+			</a>
+			<p class="mobile-drawer__note">{BRAND.demoNotice}</p>
+		</div>
+	</div>
+</div>
+
+<style>
+	.site-header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: var(--z-header);
+		transition:
+			background-color var(--duration-base) var(--ease-editorial),
+			color var(--duration-base) var(--ease-editorial),
+			border-color var(--duration-base) var(--ease-editorial);
+		border-bottom: 1px solid transparent;
+	}
+
+	.site-header--dark {
+		color: var(--color-paper);
+	}
+
+	.site-header--light {
+		color: var(--color-charcoal);
+	}
+
+	.site-header.is-scrolled {
+		background-color: rgba(34, 33, 32, 0.95);
+		color: var(--color-paper);
+		border-bottom-color: var(--rule-on-dark);
+	}
+
+	.site-header__inner {
+		display: grid;
+		grid-template-columns: auto 1fr auto;
+		align-items: center;
+		gap: 1.75rem;
+		min-height: var(--header-height);
+		padding-inline: var(--gutter);
+		max-width: 1680px;
+		margin-inline: auto;
+	}
+
+	.site-header__brand {
+		font-family: var(--font-sans);
+		font-size: 0.95rem;
+		font-weight: 500;
+		letter-spacing: 0.28em;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	.site-header__nav {
+		justify-self: center;
+	}
+
+	.site-header__list {
+		display: flex;
+		align-items: center;
+		gap: clamp(1.25rem, 2.2vw, 2.65rem);
+	}
+
+	.site-header__link {
+		position: relative;
+		font-size: var(--text-label);
+		font-weight: 400;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		opacity: 0.82;
+		white-space: nowrap;
+		transition: opacity var(--duration-fast) var(--ease-editorial);
+	}
+
+	.site-header__link::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: -0.4rem;
+		height: 1px;
+		background-color: currentColor;
+		transform: scaleX(0);
+		transform-origin: left center;
+		transition: transform var(--duration-fast) var(--ease-editorial);
+	}
+
+	.site-header__link:hover,
+	.site-header__link:focus-visible,
+	.site-header__link.is-active {
+		opacity: 1;
+	}
+
+	.site-header__link:hover::after,
+	.site-header__link:focus-visible::after,
+	.site-header__link.is-active::after {
+		transform: scaleX(1);
+	}
+
+	.site-header__link.is-active::after {
+		background-color: var(--color-terracotta);
+	}
+
+	.site-header.is-scrolled .site-header__link.is-active::after,
+	.site-header--dark .site-header__link.is-active::after {
+		background-color: var(--color-ivory);
+	}
+
+	.site-header__actions {
+		display: flex;
+		align-items: center;
+		gap: 1.25rem;
+	}
+
+	.site-header__cta {
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		padding-bottom: 0.3rem;
+		border-bottom: 1px solid currentColor;
+		transition: opacity var(--duration-fast) var(--ease-editorial);
+		white-space: nowrap;
+	}
+
+	.site-header__cta:hover {
+		opacity: 0.72;
+	}
+
+	.site-header__toggle {
+		display: none;
+		width: 2.5rem;
+		height: 2.5rem;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		gap: 0.42rem;
+	}
+
+	.site-header__toggle-line {
+		display: block;
+		width: 1.5rem;
+		height: 1px;
+		background-color: currentColor;
+		transition: transform var(--duration-fast) var(--ease-editorial);
+	}
+
+	.site-header__toggle[aria-expanded='true'] .site-header__toggle-line:first-child {
+		transform: translateY(3.5px) rotate(45deg);
+	}
+
+	.site-header__toggle[aria-expanded='true'] .site-header__toggle-line:last-child {
+		transform: translateY(-3.5px) rotate(-45deg);
+	}
+
+	/* Mobile & tablet editorial drawer */
+	.mobile-drawer {
+		position: fixed;
+		inset: 0;
+		z-index: var(--z-drawer);
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		opacity: 0;
+		overflow-y: auto;
+		transition: opacity var(--duration-fast) var(--ease-editorial);
+	}
+
+	.mobile-drawer.is-open {
+		opacity: 1;
+	}
+
+	.mobile-drawer__panel {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		min-height: 100dvh;
+		padding: 1.25rem var(--gutter) 2.5rem;
+	}
+
+	.mobile-drawer__top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		min-height: 3rem;
+		border-bottom: 1px solid var(--rule-on-dark);
+		padding-bottom: 1rem;
+	}
+
+	.mobile-drawer__brand {
+		font-size: 0.9rem;
+		font-weight: 500;
+		letter-spacing: 0.28em;
+		text-transform: uppercase;
+	}
+
+	.mobile-drawer__close {
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+		padding: 0.5rem 0;
+	}
+
+	.mobile-drawer__nav {
+		padding-block: 2rem;
+	}
+
+	.mobile-drawer__list {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.mobile-drawer__item {
+		border-bottom: 1px solid var(--rule-on-dark);
+	}
+
+	.mobile-drawer__link {
+		display: flex;
+		align-items: baseline;
+		gap: 1.25rem;
+		padding-block: 1rem;
+	}
+
+	.mobile-drawer__index {
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		color: var(--color-stone);
+	}
+
+	.mobile-drawer__text {
+		font-family: var(--font-serif);
+		font-size: clamp(1.85rem, 7vw, 2.5rem);
+		font-weight: 300;
+		line-height: 1.1;
+		letter-spacing: -0.01em;
+	}
+
+	.mobile-drawer__link.is-active .mobile-drawer__text {
+		font-style: italic;
+		color: var(--color-ivory);
+	}
+
+	.mobile-drawer__link.is-active .mobile-drawer__index {
+		color: var(--color-terracotta);
+	}
+
+	.mobile-drawer__footer {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+		padding-top: 1.5rem;
+	}
+
+	.mobile-drawer__cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1.05rem 1.35rem;
+		border: 1px solid var(--rule-on-dark);
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+
+	.mobile-drawer__note {
+		font-size: var(--text-label);
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+	}
+
+	@media (max-width: 1140px) {
+		.site-header__inner {
+			grid-template-columns: 1fr auto;
+		}
+
+		.site-header__nav {
+			display: none;
+		}
+
+		.site-header__toggle {
+			display: inline-flex;
+		}
+	}
+
+	@media (max-width: 520px) {
+		.site-header__cta {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	const initHeader = () => {
+		const header = document.querySelector<HTMLElement>('[data-header]');
+		const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+		const closeBtn = document.querySelector<HTMLButtonElement>('[data-menu-close]');
+		const drawer = document.querySelector<HTMLElement>('[data-menu-drawer]');
+		const drawerLinks = document.querySelectorAll<HTMLAnchorElement>('[data-menu-link]');
+
+		if (header) {
+			const sentinel =
+				document.getElementById('hero-sentinel') ?? document.getElementById('page-sentinel');
+			if (sentinel && 'IntersectionObserver' in window) {
+				const observer = new IntersectionObserver(
+					(entries) => {
+						const scrolled = !entries[0].isIntersecting;
+						header.classList.toggle('is-scrolled', scrolled);
+						if (scrolled) {
+							header.setAttribute('data-theme', 'dark');
+						} else {
+							const original = header.classList.contains('site-header--light')
+								? 'light'
+								: 'dark';
+							header.setAttribute('data-theme', original);
+						}
+					},
+					{ threshold: 0 },
+				);
+				observer.observe(sentinel);
+			}
+		}
+
+		if (!toggle || !drawer || !closeBtn) return;
+
+		let closeTimer: number | undefined;
+
+		const openMenu = () => {
+			window.clearTimeout(closeTimer);
+			drawer.hidden = false;
+			toggle.setAttribute('aria-expanded', 'true');
+			document.body.style.overflow = 'hidden';
+			requestAnimationFrame(() => {
+				drawer.classList.add('is-open');
+				closeBtn.focus();
+			});
+		};
+
+		const closeMenu = (restoreFocus = true) => {
+			drawer.classList.remove('is-open');
+			toggle.setAttribute('aria-expanded', 'false');
+			document.body.style.overflow = '';
+			closeTimer = window.setTimeout(() => {
+				drawer.hidden = true;
+			}, 300);
+			if (restoreFocus) toggle.focus();
+		};
+
+		toggle.addEventListener('click', () => {
+			const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+			if (isOpen) {
+				closeMenu();
+			} else {
+				openMenu();
+			}
+		});
+
+		closeBtn.addEventListener('click', () => closeMenu());
+
+		drawerLinks.forEach((link) => {
+			link.addEventListener('click', () => closeMenu(false));
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+				closeMenu();
+			}
+		});
+	};
+
+	initHeader();
+</script>

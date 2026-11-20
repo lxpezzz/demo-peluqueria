@@ -1,0 +1,449 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowUpRight } from 'lucide-astro';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import PageCta from '../components/ui/PageCta.astro';
+import { SERVICES_PAGE } from '../data/pages';
+---
+
+<Layout title={SERVICES_PAGE.meta.title} description={SERVICES_PAGE.meta.description}>
+	<Header theme="light" />
+
+	<main id="contenido-principal">
+		{/* Editorial Light Split Hero */}
+		<section class="srv-hero">
+			<span id="page-sentinel" class="page-sentinel" aria-hidden="true"></span>
+			<div class="container srv-hero__grid">
+				<div class="srv-hero__copy">
+					<p class="editorial-label">{SERVICES_PAGE.hero.label}</p>
+					<h1 class="srv-hero__title">
+						{SERVICES_PAGE.hero.headingStart}
+						<br />
+						<em class="editorial-italic">{SERVICES_PAGE.hero.headingEmphasis}</em>
+					</h1>
+					<p class="srv-hero__intro">{SERVICES_PAGE.hero.intro}</p>
+
+					<nav class="srv-hero__index" aria-label="Índice de categorías de servicio">
+						<ul>
+							{
+								SERVICES_PAGE.categories.map((cat) => (
+									<li>
+										<a href={`#${cat.id}`}>
+											<span>{cat.number}</span>
+											<span>{cat.title}</span>
+										</a>
+									</li>
+								))
+							}
+						</ul>
+					</nav>
+				</div>
+
+				<div class="srv-hero__media">
+					<Image
+						src={SERVICES_PAGE.hero.image}
+						alt={SERVICES_PAGE.hero.alt}
+						widths={[480, 760, 1080]}
+						sizes="(max-width: 900px) 100vw, 42vw"
+						loading="eager"
+						decoding="sync"
+						fetchpriority="high"
+						class="srv-hero__image"
+					/>
+				</div>
+			</div>
+		</section>
+
+		<div class="srv-notice">
+			<div class="container srv-notice__inner">
+				<span class="srv-notice__dot" aria-hidden="true"></span>
+				<p>{SERVICES_PAGE.pricingNotice}</p>
+			</div>
+		</div>
+
+		{/* Categories — Luxury Boutique Menu */}
+		{
+			SERVICES_PAGE.categories.map((category, index) => {
+				const isAlt = index % 2 === 1;
+				return (
+					<>
+						<section
+							class:list={['srv-cat', { 'srv-cat--alt': isAlt }]}
+							id={category.id}
+							aria-labelledby={`cat-${category.id}`}
+						>
+							<div class="container srv-cat__grid">
+								<div class="srv-cat__media-col" data-reveal>
+									<div class="srv-cat__media">
+										<Image
+											src={category.image}
+											alt={category.alt}
+											widths={[420, 720, 960]}
+											sizes="(max-width: 900px) 100vw, 40vw"
+											loading="lazy"
+											class="srv-cat__image"
+										/>
+									</div>
+								</div>
+
+								<div class="srv-cat__content" data-reveal style="--reveal-delay: 120ms;">
+									<div class="srv-cat__head">
+										<span class="srv-cat__number">{category.number}</span>
+										<h2 class="srv-cat__title" id={`cat-${category.id}`}>
+											{category.title}
+										</h2>
+										<p class="srv-cat__desc">{category.description}</p>
+									</div>
+
+									<ul class="srv-cat__list">
+										{category.items.map((item) => (
+											<li class="srv-row">
+												<div class="srv-row__main">
+													<h3 class="srv-row__name">{item.name}</h3>
+													<p class="srv-row__detail">{item.detail}</p>
+												</div>
+												<span class="srv-row__price">{item.pricing}</span>
+											</li>
+										))}
+									</ul>
+
+									<a class="editorial-link srv-cat__cta" href="/contacto">
+										<span>Consultar o reservar {category.title.toLowerCase()}</span>
+										<ArrowUpRight size={14} stroke-width={1.35} aria-hidden="true" />
+									</a>
+								</div>
+							</div>
+						</section>
+
+						{index === 1 && (
+							<aside class="srv-interlude" data-theme="dark">
+								<div class="container srv-interlude__inner" data-reveal>
+									<p class="srv-interlude__quote">
+										¿Dudas sobre qué técnica o ritual encaja mejor con tu cabello?
+									</p>
+									<a class="editorial-link" href="/contacto">
+										<span>Solicitar diagnóstico previo</span>
+										<ArrowUpRight size={14} stroke-width={1.35} aria-hidden="true" />
+									</a>
+								</div>
+							</aside>
+						)}
+					</>
+				);
+			})
+		}
+
+		<PageCta
+			label="ATENCIÓN PERSONALIZADA"
+			headingStart="Diseñamos tu sesión"
+			headingEmphasis="a medida."
+			ctaLabel="Reservar cita"
+			ctaHref="/contacto"
+		/>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.page-sentinel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 3.5rem;
+		pointer-events: none;
+	}
+
+	.srv-hero {
+		position: relative;
+		background-color: var(--color-ivory);
+		color: var(--color-charcoal);
+		padding-block: calc(var(--header-height) + clamp(3rem, 6vw, 5.5rem)) clamp(3.5rem, 7vw, 6rem);
+	}
+
+	.srv-hero__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 3vw, 2.5rem);
+		align-items: end;
+	}
+
+	.srv-hero__copy {
+		grid-column: 1 / 7;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.srv-hero__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-monument);
+		font-weight: 300;
+		line-height: 0.96;
+		letter-spacing: -0.025em;
+	}
+
+	.srv-hero__intro {
+		font-size: var(--text-base);
+		line-height: 1.75;
+		color: var(--color-ink-muted);
+		max-width: 44ch;
+	}
+
+	.srv-hero__index {
+		margin-top: 1rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--rule-on-light);
+	}
+
+	.srv-hero__index ul {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.85rem 1.5rem;
+	}
+
+	.srv-hero__index a {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.75rem;
+		font-size: var(--text-label);
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: var(--color-ink-muted);
+		transition: color var(--duration-fast) var(--ease-editorial);
+	}
+
+	.srv-hero__index a span:first-child {
+		color: var(--color-terracotta);
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: 0.95rem;
+	}
+
+	.srv-hero__index a:hover {
+		color: var(--color-charcoal);
+	}
+
+	.srv-hero__media {
+		grid-column: 8 / 13;
+		aspect-ratio: 3 / 4;
+		overflow: hidden;
+		background-color: #e4dfd6;
+	}
+
+	.srv-hero__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 20%;
+	}
+
+	.srv-notice {
+		background-color: var(--color-paper);
+		border-top: 1px solid var(--rule-on-light);
+		border-bottom: 1px solid var(--rule-on-light);
+		padding-block: 1.15rem;
+	}
+
+	.srv-notice__inner {
+		display: flex;
+		align-items: center;
+		gap: 0.85rem;
+		font-size: var(--text-xs);
+		color: var(--color-ink-muted);
+	}
+
+	.srv-notice__dot {
+		width: 0.4rem;
+		height: 0.4rem;
+		border-radius: 50%;
+		background-color: var(--color-terracotta);
+		flex-shrink: 0;
+	}
+
+	/* Service Category Block */
+	.srv-cat {
+		background-color: var(--color-paper);
+		color: var(--color-charcoal);
+		padding-block: var(--section-pad);
+		scroll-margin-top: var(--header-height);
+	}
+
+	.srv-cat--alt {
+		background-color: var(--color-ivory);
+	}
+
+	.srv-cat__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(2.5rem, 5vw, 4.5rem) clamp(1.5rem, 3vw, 2.5rem);
+		align-items: start;
+	}
+
+	.srv-cat__media-col {
+		grid-column: 1 / 6;
+	}
+
+	.srv-cat__content {
+		grid-column: 7 / 13;
+		display: flex;
+		flex-direction: column;
+		gap: 2.25rem;
+	}
+
+	.srv-cat--alt .srv-cat__media-col {
+		grid-column: 8 / 13;
+		order: 2;
+	}
+
+	.srv-cat--alt .srv-cat__content {
+		grid-column: 1 / 7;
+		order: 1;
+	}
+
+	.srv-cat__media {
+		aspect-ratio: 3 / 4;
+		overflow: hidden;
+		background-color: #e4dfd6;
+	}
+
+	.srv-cat__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 22%;
+		transition: transform var(--duration-slow) var(--ease-editorial);
+	}
+
+	.srv-cat__media:hover .srv-cat__image {
+		transform: scale(1.03);
+	}
+
+	.srv-cat__head {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+	}
+
+	.srv-cat__number {
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: clamp(2rem, 2.8vw, 3rem);
+		line-height: 1;
+		color: var(--color-terracotta);
+	}
+
+	.srv-cat__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-h2);
+		font-weight: 300;
+		line-height: 1.04;
+		letter-spacing: -0.02em;
+	}
+
+	.srv-cat__desc {
+		font-size: var(--text-base);
+		line-height: 1.72;
+		color: var(--color-ink-muted);
+		max-width: 48ch;
+	}
+
+	.srv-cat__list {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.srv-row {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1.5rem;
+		padding-block: 1.35rem;
+		border-top: 1px solid var(--rule-on-light);
+	}
+
+	.srv-row:last-child {
+		border-bottom: 1px solid var(--rule-on-light);
+	}
+
+	.srv-row__main {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.srv-row__name {
+		font-family: var(--font-serif);
+		font-size: clamp(1.3rem, 1.15rem + 0.5vw, 1.65rem);
+		font-weight: 400;
+		line-height: 1.2;
+	}
+
+	.srv-row__detail {
+		font-size: var(--text-xs);
+		line-height: 1.65;
+		color: var(--color-ink-muted);
+		max-width: 46ch;
+	}
+
+	.srv-row__price {
+		font-size: var(--text-label);
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-ink-muted);
+		white-space: nowrap;
+	}
+
+	.srv-cat__cta {
+		align-self: flex-start;
+	}
+
+	/* Contextual Dark Interlude */
+	.srv-interlude {
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		padding-block: clamp(3rem, 6vw, 4.75rem);
+	}
+
+	.srv-interlude__inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 1.5rem 2.5rem;
+	}
+
+	.srv-interlude__quote {
+		font-family: var(--font-serif);
+		font-size: clamp(1.6rem, 1.25rem + 1.2vw, 2.35rem);
+		font-weight: 300;
+		line-height: 1.25;
+		max-width: 34ch;
+	}
+
+	@media (max-width: 960px) {
+		.srv-hero__copy,
+		.srv-hero__media,
+		.srv-cat__media-col,
+		.srv-cat__content,
+		.srv-cat--alt .srv-cat__media-col,
+		.srv-cat--alt .srv-cat__content {
+			grid-column: 1 / -1;
+			order: unset;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.srv-hero__index ul {
+			grid-template-columns: 1fr;
+		}
+
+		.srv-row {
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+	}
+</style>

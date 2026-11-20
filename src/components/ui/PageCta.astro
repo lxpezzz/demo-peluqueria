@@ -1,0 +1,129 @@
+---
+import { ArrowUpRight } from 'lucide-astro';
+
+interface Props {
+	label?: string;
+	headingStart: string;
+	headingEmphasis: string;
+	body?: string;
+	ctaLabel?: string;
+	ctaHref?: string;
+}
+
+const {
+	label = 'CITA PREVIA',
+	headingStart,
+	headingEmphasis,
+	body = 'Atendemos con cita previa para dedicar a cada sesión el tiempo, la calma y la atención que necesita.',
+	ctaLabel = 'Reservar cita',
+	ctaHref = '/contacto',
+} = Astro.props;
+---
+
+<section class="page-cta" data-theme="dark">
+	<div class="container page-cta__inner" data-reveal>
+		<div class="page-cta__copy">
+			<p class="editorial-label">{label}</p>
+			<h2 class="page-cta__title">
+				{headingStart}{' '}
+				<em class="editorial-italic">{headingEmphasis}</em>
+			</h2>
+			{body && <p class="page-cta__body">{body}</p>}
+		</div>
+
+		<a class="page-cta__button" href={ctaHref}>
+			<span>{ctaLabel}</span>
+			<span class="page-cta__icon" aria-hidden="true">
+				<ArrowUpRight size={16} stroke-width={1.25} />
+			</span>
+		</a>
+	</div>
+</section>
+
+<style>
+	.page-cta {
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		padding-block: clamp(5rem, 9vw, 8.5rem);
+		border-top: 1px solid var(--rule-on-dark);
+	}
+
+	.page-cta__inner {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 2.5rem 4rem;
+		flex-wrap: wrap;
+	}
+
+	.page-cta__copy {
+		display: flex;
+		flex-direction: column;
+		gap: 1.35rem;
+		max-width: 44rem;
+	}
+
+	.page-cta__title {
+		font-family: var(--font-serif);
+		font-size: clamp(2.5rem, 1.8rem + 3vw, 4.75rem);
+		font-weight: 300;
+		line-height: 1.02;
+		letter-spacing: -0.02em;
+	}
+
+	.page-cta__body {
+		font-size: var(--text-base);
+		line-height: 1.72;
+		color: var(--color-ink-on-dark-muted);
+		max-width: 46ch;
+	}
+
+	.page-cta__button {
+		display: inline-flex;
+		align-items: center;
+		gap: 1.5rem;
+		padding: 0.7rem 0.7rem 0.7rem 1.85rem;
+		border: 1px solid rgba(248, 247, 244, 0.36);
+		border-radius: 999px;
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--color-paper);
+		white-space: nowrap;
+		transition:
+			background-color var(--duration-base) var(--ease-editorial),
+			border-color var(--duration-base) var(--ease-editorial),
+			color var(--duration-base) var(--ease-editorial),
+			transform var(--duration-fast) var(--ease-editorial);
+	}
+
+	.page-cta__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.65rem;
+		height: 2.65rem;
+		border-radius: 50%;
+		border: 1px solid rgba(248, 247, 244, 0.24);
+		transition:
+			transform var(--duration-base) var(--ease-editorial),
+			border-color var(--duration-base) var(--ease-editorial);
+	}
+
+	.page-cta__button:hover,
+	.page-cta__button:focus-visible {
+		background-color: var(--color-ivory);
+		border-color: var(--color-ivory);
+		color: var(--color-charcoal);
+	}
+
+	.page-cta__button:hover .page-cta__icon {
+		border-color: rgba(34, 33, 32, 0.22);
+		transform: translate(2px, -2px);
+	}
+
+	.page-cta__button:active {
+		transform: scale(0.985);
+	}
+</style>

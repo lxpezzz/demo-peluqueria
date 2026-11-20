@@ -1,0 +1,252 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowUpRight } from 'lucide-astro';
+import { WORKS_DATA } from '../../data/studio';
+---
+
+<section class="works" id="trabajos" aria-labelledby="works-heading" data-theme="dark">
+	<div class="container">
+		<header class="works__header" data-reveal>
+			<div class="works__heading-group">
+				<p class="editorial-label">{WORKS_DATA.label}</p>
+				<h2 class="works__title" id="works-heading">
+					{WORKS_DATA.headingStart}{' '}
+					<em class="editorial-italic">{WORKS_DATA.headingEmphasis}</em>
+				</h2>
+			</div>
+			<div class="works__aside">
+				<p class="works__caption">{WORKS_DATA.caption}</p>
+				<a class="editorial-link" href="/trabajos">
+					<span>Explorar el lookbook</span>
+					<ArrowUpRight size={14} stroke-width={1.35} aria-hidden="true" />
+				</a>
+			</div>
+		</header>
+
+		<div class="works__gallery">
+			{
+				WORKS_DATA.items.map((work, index) => (
+					<figure
+						class:list={['work-piece', `work-piece--${work.layout}`]}
+						data-reveal
+						style={`--reveal-delay: ${(index % 2) * 120}ms;`}
+					>
+						<div class="work-piece__media">
+							<Image
+								src={work.image}
+								alt={work.alt}
+								widths={[480, 760, 1080]}
+								sizes="(max-width: 768px) 100vw, 45vw"
+								loading="lazy"
+								class="work-piece__image"
+							/>
+						</div>
+						<figcaption class="work-piece__meta">
+							<div class="work-piece__head">
+								<span class="work-piece__roman" aria-hidden="true">
+									{work.number}
+								</span>
+								<h3 class="work-piece__title">{work.title}</h3>
+								<span class="work-piece__discipline">{work.discipline}</span>
+							</div>
+							<p class="work-piece__note">{work.note}</p>
+						</figcaption>
+					</figure>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.works {
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		padding-block: var(--section-pad);
+	}
+
+	.works__header {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 1.5rem 2.5rem;
+		margin-bottom: clamp(3.5rem, 7vw, 6rem);
+	}
+
+	.works__heading-group {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.works__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-h2);
+		font-weight: 300;
+		line-height: 1.02;
+		letter-spacing: -0.02em;
+	}
+
+	.works__aside {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.15rem;
+	}
+
+	.works__caption {
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+		max-width: 34ch;
+	}
+
+	/* Deliberately asymmetric 12-column editorial spread */
+	.works__gallery {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(3.5rem, 6vw, 6.5rem) clamp(1.25rem, 2.5vw, 2.5rem);
+		align-items: start;
+	}
+
+	.work-piece {
+		display: flex;
+		flex-direction: column;
+		gap: 1.1rem;
+	}
+
+	.work-piece--tall {
+		grid-column: 1 / 7;
+	}
+
+	.work-piece--wide {
+		grid-column: 8 / 13;
+		margin-top: clamp(3rem, 9vw, 9rem);
+	}
+
+	.work-piece--portrait {
+		grid-column: 2 / 6;
+	}
+
+	.work-piece--square {
+		grid-column: 7 / 12;
+		margin-top: clamp(1rem, 4vw, 4rem);
+	}
+
+	.work-piece__media {
+		overflow: hidden;
+		background-color: #191817;
+	}
+
+	.work-piece--tall .work-piece__media {
+		aspect-ratio: 3 / 4;
+	}
+
+	.work-piece--wide .work-piece__media {
+		aspect-ratio: 4 / 3;
+	}
+
+	.work-piece--portrait .work-piece__media {
+		aspect-ratio: 4 / 5;
+	}
+
+	.work-piece--square .work-piece__media {
+		aspect-ratio: 1 / 1;
+	}
+
+	.work-piece__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 22%;
+		transition: transform var(--duration-slow) var(--ease-editorial);
+	}
+
+	.work-piece:hover .work-piece__image {
+		transform: scale(1.035);
+	}
+
+	.work-piece__meta {
+		display: flex;
+		flex-direction: column;
+		gap: 0.45rem;
+		padding-top: 0.9rem;
+		border-top: 1px solid var(--rule-on-dark);
+	}
+
+	.work-piece__head {
+		display: flex;
+		align-items: baseline;
+		gap: 0.85rem;
+		flex-wrap: wrap;
+	}
+
+	.work-piece__roman {
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: 0.95rem;
+		color: var(--color-stone);
+	}
+
+	.work-piece__title {
+		font-family: var(--font-serif);
+		font-size: clamp(1.5rem, 1.25rem + 0.8vw, 2rem);
+		font-weight: 300;
+		line-height: 1.1;
+		color: var(--color-paper);
+	}
+
+	.work-piece__discipline {
+		margin-left: auto;
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-stone);
+	}
+
+	.work-piece__note {
+		font-size: var(--text-xs);
+		line-height: 1.65;
+		color: var(--color-ink-on-dark-muted);
+		max-width: 42ch;
+	}
+
+	@media (max-width: 900px) {
+		.works__gallery {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 3.25rem 1.75rem;
+		}
+
+		.work-piece--tall,
+		.work-piece--wide,
+		.work-piece--portrait,
+		.work-piece--square {
+			grid-column: auto;
+			margin-top: 0;
+		}
+
+		.work-piece--wide,
+		.work-piece--square {
+			margin-top: 2.5rem;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.works__gallery {
+			grid-template-columns: 1fr;
+			gap: 3.5rem;
+		}
+
+		.work-piece--wide,
+		.work-piece--square {
+			margin-top: 0;
+		}
+
+		.work-piece__discipline {
+			margin-left: 0;
+			width: 100%;
+		}
+	}
+</style>

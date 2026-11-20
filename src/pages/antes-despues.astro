@@ -1,0 +1,360 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import BeforeAfterSlider from '../components/ui/BeforeAfterSlider.astro';
+import PageCta from '../components/ui/PageCta.astro';
+import { TRANSFORMATIONS_PAGE } from '../data/pages';
+---
+
+<Layout
+	title={TRANSFORMATIONS_PAGE.meta.title}
+	description={TRANSFORMATIONS_PAGE.meta.description}
+>
+	<Header theme="light" />
+
+	<main id="contenido-principal">
+		{/* Editorial Hero */}
+		<section class="ba-hero">
+			<span id="page-sentinel" class="page-sentinel" aria-hidden="true"></span>
+			<div class="container ba-hero__inner">
+				<div class="ba-hero__top">
+					<p class="editorial-label">{TRANSFORMATIONS_PAGE.hero.label}</p>
+					<h1 class="ba-hero__title">
+						{TRANSFORMATIONS_PAGE.hero.headingStart}{' '}
+						<em class="editorial-italic">{TRANSFORMATIONS_PAGE.hero.headingEmphasis1}</em>{' '}
+						{TRANSFORMATIONS_PAGE.hero.headingMid}{' '}
+						<em class="editorial-italic">{TRANSFORMATIONS_PAGE.hero.headingEmphasis2}</em>
+					</h1>
+					<p class="ba-hero__intro">{TRANSFORMATIONS_PAGE.hero.intro}</p>
+				</div>
+
+				<div class="ba-hero__media">
+					<Image
+						src={TRANSFORMATIONS_PAGE.hero.image}
+						alt={TRANSFORMATIONS_PAGE.hero.alt}
+						widths={[640, 1080, 1600]}
+						sizes="(max-width: 768px) 100vw, 92vw"
+						loading="eager"
+						decoding="sync"
+						fetchpriority="high"
+						class="ba-hero__image"
+					/>
+				</div>
+			</div>
+		</section>
+
+		{/* Honest Demo Disclosure */}
+		<div class="ba-disclosure">
+			<div class="container ba-disclosure__inner">
+				<span class="ba-disclosure__dot" aria-hidden="true"></span>
+				<p>{TRANSFORMATIONS_PAGE.demoDisclosure}</p>
+			</div>
+		</div>
+
+		{/* 4 Alternating Transformation Cases */}
+		{
+			TRANSFORMATIONS_PAGE.cases.map((item, idx) => (
+				<section
+					class:list={[
+						'ba-case',
+						`ba-case--${item.layout}`,
+						item.theme === 'dark' ? 'ba-case--dark' : idx === 2 ? 'ba-case--ivory' : 'ba-case--paper',
+					]}
+					id={`caso-${item.id}`}
+					aria-labelledby={`case-heading-${item.id}`}
+					data-theme={item.theme === 'dark' ? 'dark' : undefined}
+				>
+					<div class="container ba-case__grid">
+						<div class="ba-case__copy" data-reveal>
+							<span class="ba-case__num" aria-hidden="true">
+								{item.number}
+							</span>
+							<p class="editorial-label">{item.category}</p>
+							<h2 class="ba-case__title" id={`case-heading-${item.id}`}>
+								{item.title}
+							</h2>
+							<p class="ba-case__desc">{item.description}</p>
+
+							<div class="ba-case__detail">
+								<p class="ba-case__service">{item.serviceNote}</p>
+								<p class="ba-case__note">{item.detailText}</p>
+							</div>
+						</div>
+
+						<div class="ba-case__slider" data-reveal style="--reveal-delay: 120ms;">
+							<BeforeAfterSlider
+								id={item.id}
+								beforeImage={item.beforeImage}
+								beforeAlt={item.beforeAlt}
+								afterImage={item.afterImage}
+								afterAlt={item.afterAlt}
+								label={`${item.category} — ${item.title}`}
+								aspectRatio={item.layout === 'wide-split' ? '4 / 5' : '3 / 4'}
+								priority={idx === 0}
+								demoNote="Par demostrativo · Sustituible por caso real"
+							/>
+						</div>
+					</div>
+				</section>
+			))
+		}
+
+		<PageCta
+			label={TRANSFORMATIONS_PAGE.cta.label}
+			headingStart={TRANSFORMATIONS_PAGE.cta.headingStart}
+			headingEmphasis={TRANSFORMATIONS_PAGE.cta.headingEmphasis}
+			ctaLabel={TRANSFORMATIONS_PAGE.cta.ctaLabel}
+			ctaHref={TRANSFORMATIONS_PAGE.cta.ctaHref}
+		/>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.page-sentinel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 3.5rem;
+		pointer-events: none;
+	}
+
+	.ba-hero {
+		position: relative;
+		background-color: var(--color-ivory);
+		color: var(--color-charcoal);
+		padding-block: calc(var(--header-height) + clamp(3rem, 6vw, 5.5rem)) clamp(3rem, 6vw, 5rem);
+	}
+
+	.ba-hero__inner {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(2.5rem, 5vw, 4.25rem);
+	}
+
+	.ba-hero__top {
+		display: flex;
+		flex-direction: column;
+		gap: 1.35rem;
+		max-width: 56rem;
+	}
+
+	.ba-hero__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-monument);
+		font-weight: 300;
+		line-height: 0.98;
+		letter-spacing: -0.025em;
+	}
+
+	.ba-hero__intro {
+		font-size: var(--text-lead);
+		font-weight: 300;
+		line-height: 1.65;
+		color: var(--color-ink-muted);
+		max-width: 50ch;
+	}
+
+	.ba-hero__media {
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background-color: #e4dfd6;
+	}
+
+	.ba-hero__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 25%;
+	}
+
+	.ba-disclosure {
+		background-color: var(--color-paper);
+		border-top: 1px solid var(--rule-on-light);
+		border-bottom: 1px solid var(--rule-on-light);
+		padding-block: 1.15rem;
+	}
+
+	.ba-disclosure__inner {
+		display: flex;
+		align-items: center;
+		gap: 0.85rem;
+		font-size: var(--text-xs);
+		line-height: 1.6;
+		color: var(--color-ink-muted);
+	}
+
+	.ba-disclosure__dot {
+		width: 0.4rem;
+		height: 0.4rem;
+		border-radius: 50%;
+		background-color: var(--color-terracotta);
+		flex-shrink: 0;
+	}
+
+	/* Cases — Alternating Editorial Compositions */
+	.ba-case {
+		padding-block: var(--section-pad);
+	}
+
+	.ba-case--paper {
+		background-color: var(--color-paper);
+		color: var(--color-charcoal);
+	}
+
+	.ba-case--ivory {
+		background-color: var(--color-ivory);
+		color: var(--color-charcoal);
+	}
+
+	.ba-case--dark {
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+	}
+
+	.ba-case__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(2.5rem, 5vw, 4.5rem) clamp(1.5rem, 3vw, 2.5rem);
+		align-items: center;
+	}
+
+	/* Layout 1: Copy left (1-5), Slider right (6-13) */
+	.ba-case--featured-right .ba-case__copy {
+		grid-column: 1 / 6;
+	}
+
+	.ba-case--featured-right .ba-case__slider {
+		grid-column: 7 / 13;
+	}
+
+	/* Layout 2: Slider left (1-7), Copy right (8-13) */
+	.ba-case--featured-left .ba-case__slider {
+		grid-column: 1 / 7;
+		order: 1;
+	}
+
+	.ba-case--featured-left .ba-case__copy {
+		grid-column: 8 / 13;
+		order: 2;
+	}
+
+	/* Layout 3: Wide Slider (1-8), Offset editorial copy (9-13) */
+	.ba-case--wide-split .ba-case__slider {
+		grid-column: 1 / 8;
+		order: 1;
+	}
+
+	.ba-case--wide-split .ba-case__copy {
+		grid-column: 9 / 13;
+		order: 2;
+		align-self: end;
+	}
+
+	/* Layout 4: Offset Copy (2-6), Large Slider (7-13) */
+	.ba-case--offset-editorial .ba-case__copy {
+		grid-column: 2 / 6;
+		align-self: start;
+		padding-top: clamp(0.5rem, 3vw, 3rem);
+	}
+
+	.ba-case--offset-editorial .ba-case__slider {
+		grid-column: 7 / 13;
+	}
+
+	.ba-case__copy {
+		display: flex;
+		flex-direction: column;
+		gap: 1.15rem;
+	}
+
+	.ba-case__num {
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: clamp(2.5rem, 4vw, 4.25rem);
+		font-weight: 300;
+		line-height: 0.9;
+		color: var(--color-terracotta);
+	}
+
+	.ba-case--dark .ba-case__num {
+		color: var(--color-stone);
+	}
+
+	.ba-case__title {
+		font-family: var(--font-serif);
+		font-size: clamp(2.1rem, 1.55rem + 2vw, 3.35rem);
+		font-weight: 300;
+		line-height: 1.08;
+		letter-spacing: -0.015em;
+	}
+
+	.ba-case__desc {
+		font-size: var(--text-base);
+		line-height: 1.75;
+		color: var(--color-ink-muted);
+	}
+
+	.ba-case--dark .ba-case__desc {
+		color: var(--color-ink-on-dark-muted);
+	}
+
+	.ba-case__detail {
+		margin-top: 0.75rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--rule-on-light);
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+	}
+
+	.ba-case--dark .ba-case__detail {
+		border-top-color: var(--rule-on-dark);
+	}
+
+	.ba-case__service {
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	.ba-case__note {
+		font-size: var(--text-xs);
+		line-height: 1.68;
+		color: var(--color-ink-muted);
+	}
+
+	.ba-case--dark .ba-case__note {
+		color: var(--color-stone);
+	}
+
+	@media (max-width: 960px) {
+		.ba-case__grid {
+			grid-template-columns: 1fr;
+		}
+
+		.ba-case--featured-right .ba-case__copy,
+		.ba-case--featured-right .ba-case__slider,
+		.ba-case--featured-left .ba-case__copy,
+		.ba-case--featured-left .ba-case__slider,
+		.ba-case--wide-split .ba-case__copy,
+		.ba-case--wide-split .ba-case__slider,
+		.ba-case--offset-editorial .ba-case__copy,
+		.ba-case--offset-editorial .ba-case__slider {
+			grid-column: 1 / -1;
+			order: unset;
+			padding-top: 0;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.ba-hero__media {
+			aspect-ratio: 4 / 3;
+		}
+	}
+</style>

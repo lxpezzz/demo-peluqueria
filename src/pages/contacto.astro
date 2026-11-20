@@ -1,0 +1,539 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowUpRight } from 'lucide-astro';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { CONTACT_PAGE } from '../data/pages';
+---
+
+<Layout title={CONTACT_PAGE.meta.title} description={CONTACT_PAGE.meta.description}>
+	<Header theme="light" />
+
+	<main id="contenido-principal">
+		{/* Split Editorial Hero */}
+		<section class="ct-hero">
+			<span id="page-sentinel" class="page-sentinel" aria-hidden="true"></span>
+			<div class="container ct-hero__grid">
+				<div class="ct-hero__copy">
+					<p class="editorial-label">{CONTACT_PAGE.hero.label}</p>
+					<h1 class="ct-hero__title">
+						{CONTACT_PAGE.hero.headingStart}
+						<br />
+						<em class="editorial-italic">{CONTACT_PAGE.hero.headingEmphasis}</em>
+					</h1>
+					<p class="ct-hero__intro">{CONTACT_PAGE.hero.intro}</p>
+				</div>
+
+				<div class="ct-hero__media">
+					<Image
+						src={CONTACT_PAGE.hero.image}
+						alt={CONTACT_PAGE.hero.alt}
+						widths={[480, 760, 1080]}
+						sizes="(max-width: 900px) 100vw, 42vw"
+						loading="eager"
+						decoding="sync"
+						fetchpriority="high"
+						class="ct-hero__image"
+					/>
+				</div>
+			</div>
+		</section>
+
+		{/* Contact Info + Appointment Request Form */}
+		<section class="ct-main" aria-label="Información de contacto y solicitud de cita">
+			<div class="container ct-main__grid">
+				<aside class="ct-info" data-reveal>
+					<div class="ct-demo-box">
+						<div class="ct-demo-box__head">
+							<span class="ct-demo-box__dot" aria-hidden="true"></span>
+							<h2 class="ct-demo-box__title">{CONTACT_PAGE.demoBanner.title}</h2>
+						</div>
+						<p class="ct-demo-box__text">{CONTACT_PAGE.demoBanner.text}</p>
+					</div>
+
+					<dl class="ct-details">
+						{
+							CONTACT_PAGE.infoBlocks.map((block) => (
+								<div class="ct-details__row">
+									<dt class="ct-details__label">{block.label}</dt>
+									<dd class="ct-details__value">{block.value}</dd>
+								</div>
+							))
+						}
+					</dl>
+				</aside>
+
+				<div class="ct-form-wrap" data-reveal style="--reveal-delay: 120ms;">
+					<h2 class="ct-form__heading">Solicitud de cita</h2>
+					<p class="ct-form__sub">
+						Completa los datos orientativos de tu visita. Los campos marcados con * son obligatorios.
+					</p>
+
+					<form class="ct-form" novalidate data-contact-form>
+						<div class="ct-field">
+							<label class="ct-label" for="ct-name">Nombre *</label>
+							<input
+								class="ct-input"
+								id="ct-name"
+								name="name"
+								type="text"
+								autocomplete="name"
+								required
+								aria-describedby="ct-name-error"
+							/>
+							<p class="ct-error" id="ct-name-error" aria-live="polite"></p>
+						</div>
+
+						<div class="ct-field-row">
+							<div class="ct-field">
+								<label class="ct-label" for="ct-email">Correo electrónico *</label>
+								<input
+									class="ct-input"
+									id="ct-email"
+									name="email"
+									type="email"
+									autocomplete="email"
+									required
+									aria-describedby="ct-email-error"
+								/>
+								<p class="ct-error" id="ct-email-error" aria-live="polite"></p>
+							</div>
+
+							<div class="ct-field">
+								<label class="ct-label" for="ct-phone">Teléfono (opcional)</label>
+								<input
+									class="ct-input"
+									id="ct-phone"
+									name="phone"
+									type="tel"
+									autocomplete="tel"
+								/>
+							</div>
+						</div>
+
+						<div class="ct-field">
+							<label class="ct-label" for="ct-service">Servicio de interés *</label>
+							<select
+								class="ct-input ct-select"
+								id="ct-service"
+								name="service"
+								required
+								aria-describedby="ct-service-error"
+							>
+								<option value="">Selecciona una opción</option>
+								{
+									CONTACT_PAGE.serviceOptions.map((option) => (
+										<option value={option}>{option}</option>
+									))
+								}
+							</select>
+							<p class="ct-error" id="ct-service-error" aria-live="polite"></p>
+						</div>
+
+						<div class="ct-field">
+							<label class="ct-label" for="ct-message">Mensaje *</label>
+							<textarea
+								class="ct-input ct-textarea"
+								id="ct-message"
+								name="message"
+								rows="4"
+								required
+								placeholder="Cuéntanos brevemente tu idea, textura actual o disponibilidad orientativa."
+								aria-describedby="ct-message-error"
+							></textarea>
+							<p class="ct-error" id="ct-message-error" aria-live="polite"></p>
+						</div>
+
+						<div class="ct-form__actions">
+							<button type="submit" class="ct-submit">
+								<span>Validar solicitud (demo)</span>
+								<span class="ct-submit__icon" aria-hidden="true">
+									<ArrowUpRight size={15} stroke-width={1.25} />
+								</span>
+							</button>
+						</div>
+
+						<div
+							class="ct-status"
+							role="status"
+							aria-live="polite"
+							hidden
+							data-form-status
+						></div>
+					</form>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.page-sentinel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 3.5rem;
+		pointer-events: none;
+	}
+
+	.ct-hero {
+		position: relative;
+		background-color: var(--color-ivory);
+		color: var(--color-charcoal);
+		padding-block: calc(var(--header-height) + clamp(3rem, 6vw, 5.5rem)) clamp(3rem, 6vw, 5rem);
+	}
+
+	.ct-hero__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 3vw, 2.5rem);
+		align-items: end;
+	}
+
+	.ct-hero__copy {
+		grid-column: 1 / 7;
+		display: flex;
+		flex-direction: column;
+		gap: 1.4rem;
+	}
+
+	.ct-hero__title {
+		font-family: var(--font-serif);
+		font-size: var(--text-monument);
+		font-weight: 300;
+		line-height: 0.96;
+		letter-spacing: -0.025em;
+	}
+
+	.ct-hero__intro {
+		font-size: var(--text-lead);
+		font-weight: 300;
+		line-height: 1.65;
+		color: var(--color-ink-muted);
+		max-width: 42ch;
+	}
+
+	.ct-hero__media {
+		grid-column: 8 / 13;
+		aspect-ratio: 4 / 5;
+		overflow: hidden;
+		background-color: #e4dfd6;
+	}
+
+	.ct-hero__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	/* Main Split */
+	.ct-main {
+		background-color: var(--color-paper);
+		color: var(--color-charcoal);
+		padding-block: var(--section-pad);
+	}
+
+	.ct-main__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 3vw, 2.5rem);
+		align-items: start;
+	}
+
+	.ct-info {
+		grid-column: 1 / 6;
+		display: flex;
+		flex-direction: column;
+		gap: 2.5rem;
+	}
+
+	.ct-demo-box {
+		padding: 1.75rem;
+		border: 1px solid var(--rule-on-light);
+		background-color: var(--color-ivory);
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+	}
+
+	.ct-demo-box__head {
+		display: flex;
+		align-items: center;
+		gap: 0.7rem;
+	}
+
+	.ct-demo-box__dot {
+		width: 0.45rem;
+		height: 0.45rem;
+		border-radius: 50%;
+		background-color: var(--color-terracotta);
+	}
+
+	.ct-demo-box__title {
+		font-family: var(--font-sans);
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+
+	.ct-demo-box__text {
+		font-size: var(--text-xs);
+		line-height: 1.7;
+		color: var(--color-ink-muted);
+	}
+
+	.ct-details {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.ct-details__row {
+		padding-block: 1.25rem;
+		border-top: 1px solid var(--rule-on-light);
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.ct-details__row:last-child {
+		border-bottom: 1px solid var(--rule-on-light);
+	}
+
+	.ct-details__label {
+		font-size: var(--text-label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-ink-muted);
+	}
+
+	.ct-details__value {
+		margin: 0;
+		font-family: var(--font-serif);
+		font-size: 1.35rem;
+		font-weight: 400;
+		color: var(--color-charcoal);
+	}
+
+	/* Form */
+	.ct-form-wrap {
+		grid-column: 7 / 13;
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.ct-form__heading {
+		font-family: var(--font-serif);
+		font-size: var(--text-h2);
+		font-weight: 300;
+		line-height: 1.05;
+	}
+
+	.ct-form__sub {
+		font-size: var(--text-sm);
+		color: var(--color-ink-muted);
+		margin-bottom: 0.75rem;
+	}
+
+	.ct-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.65rem;
+	}
+
+	.ct-field-row {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.5rem;
+	}
+
+	.ct-field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+	}
+
+	.ct-label {
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-charcoal);
+	}
+
+	.ct-input {
+		width: 100%;
+		padding: 0.9rem 0;
+		border: 0;
+		border-bottom: 1px solid rgba(34, 33, 32, 0.28);
+		background-color: transparent;
+		color: var(--color-charcoal);
+		font-family: var(--font-sans);
+		font-size: var(--text-base);
+		transition: border-color var(--duration-fast) var(--ease-editorial);
+	}
+
+	.ct-input:focus {
+		outline: none;
+		border-bottom-color: var(--color-charcoal);
+	}
+
+	.ct-input[aria-invalid='true'] {
+		border-bottom-color: var(--color-terracotta);
+	}
+
+	.ct-textarea {
+		resize: vertical;
+		min-height: 7rem;
+		line-height: 1.65;
+	}
+
+	.ct-error {
+		font-size: 0.78rem;
+		color: var(--color-terracotta);
+		min-height: 1.1em;
+	}
+
+	.ct-form__actions {
+		padding-top: 0.5rem;
+	}
+
+	.ct-submit {
+		display: inline-flex;
+		align-items: center;
+		gap: 1.35rem;
+		padding: 0.65rem 0.65rem 0.65rem 1.75rem;
+		border: 1px solid var(--color-charcoal);
+		border-radius: 999px;
+		background-color: var(--color-charcoal);
+		color: var(--color-paper);
+		font-size: var(--text-label);
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		transition:
+			background-color var(--duration-base) var(--ease-editorial),
+			color var(--duration-base) var(--ease-editorial),
+			transform var(--duration-fast) var(--ease-editorial);
+	}
+
+	.ct-submit__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: 50%;
+		border: 1px solid rgba(248, 247, 244, 0.25);
+		transition: transform var(--duration-base) var(--ease-editorial);
+	}
+
+	.ct-submit:hover {
+		background-color: var(--color-ivory);
+		color: var(--color-charcoal);
+	}
+
+	.ct-submit:hover .ct-submit__icon {
+		border-color: rgba(34, 33, 32, 0.22);
+		transform: translate(2px, -2px);
+	}
+
+	.ct-status {
+		padding: 1.25rem 1.5rem;
+		border: 1px solid var(--color-terracotta);
+		background-color: var(--color-ivory);
+		font-size: var(--text-xs);
+		line-height: 1.7;
+		color: var(--color-charcoal);
+	}
+
+	@media (max-width: 960px) {
+		.ct-hero__copy,
+		.ct-hero__media,
+		.ct-info,
+		.ct-form-wrap {
+			grid-column: 1 / -1;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.ct-field-row {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+
+<script>
+	const initContactForm = () => {
+		const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+		const statusEl = document.querySelector<HTMLElement>('[data-form-status]');
+		if (!form || !statusEl) return;
+
+		const fields = [
+			{
+				id: 'ct-name',
+				errorId: 'ct-name-error',
+				validate: (v: string) => (v.trim().length >= 2 ? '' : 'Introduce tu nombre.'),
+			},
+			{
+				id: 'ct-email',
+				errorId: 'ct-email-error',
+				validate: (v: string) =>
+					/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+						? ''
+						: 'Introduce un correo electrónico válido.',
+			},
+			{
+				id: 'ct-service',
+				errorId: 'ct-service-error',
+				validate: (v: string) => (v.trim() ? '' : 'Selecciona un servicio de interés.'),
+			},
+			{
+				id: 'ct-message',
+				errorId: 'ct-message-error',
+				validate: (v: string) =>
+					v.trim().length >= 10
+						? ''
+						: 'Cuéntanos brevemente qué necesitas (mínimo 10 caracteres).',
+			},
+		];
+
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			let firstInvalid: HTMLElement | null = null;
+
+			fields.forEach(({ id, errorId, validate }) => {
+				const input = document.getElementById(id) as
+					| HTMLInputElement
+					| HTMLSelectElement
+					| HTMLTextAreaElement
+					| null;
+				const errorEl = document.getElementById(errorId);
+				if (!input || !errorEl) return;
+
+				const message = validate(input.value);
+				errorEl.textContent = message;
+				input.setAttribute('aria-invalid', message ? 'true' : 'false');
+				if (message && !firstInvalid) firstInvalid = input;
+			});
+
+			if (firstInvalid) {
+				statusEl.hidden = true;
+				(firstInvalid as HTMLElement).focus();
+				return;
+			}
+
+			statusEl.hidden = false;
+			statusEl.textContent =
+				'Validación completada correctamente. Esta es una demo conceptual sin backend conectado: no se ha enviado ni almacenado ningún dato.';
+		});
+	};
+
+	initContactForm();
+</script>
