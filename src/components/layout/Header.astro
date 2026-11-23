@@ -30,10 +30,9 @@ const isCurrent = (href: string) => {
 					href={AGENCY.url}
 					target="_blank"
 					rel="noopener noreferrer"
-					aria-label={`Visitar ${AGENCY.name} en ${AGENCY.domain} (se abre en una nueva pestaña)`}
+					aria-label={`Visitar ${AGENCY.name} (se abre en una nueva pestaña)`}
 				>
 					<strong>{AGENCY.name}</strong>
-					<span class="site-header__demo-domain">· {AGENCY.domain}</span>
 					<ArrowUpRight size={12} stroke-width={1.5} aria-hidden="true" />
 				</a>
 			</p>
@@ -145,7 +144,7 @@ const isCurrent = (href: string) => {
 					target="_blank"
 					rel="noopener noreferrer"
 				>
-					{AGENCY.name} ({AGENCY.domain})
+					{AGENCY.name}
 					<ArrowUpRight size={12} stroke-width={1.4} aria-hidden="true" />
 				</a>
 			</p>
@@ -238,11 +237,6 @@ const isCurrent = (href: string) => {
 
 	.site-header__demo-link strong {
 		font-weight: 500;
-	}
-
-	.site-header__demo-domain {
-		color: var(--color-stone);
-		font-weight: 400;
 	}
 
 	.site-header__demo-link:hover,
@@ -524,8 +518,7 @@ const isCurrent = (href: string) => {
 			display: none;
 		}
 
-		.site-header__demo-tag,
-		.site-header__demo-domain {
+		.site-header__demo-tag {
 			display: none;
 		}
 
