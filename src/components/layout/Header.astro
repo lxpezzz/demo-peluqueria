@@ -1,6 +1,6 @@
 ---
 import { ArrowUpRight } from 'lucide-astro';
-import { BRAND, NAV_ITEMS } from '../../data/studio';
+import { AGENCY, BRAND, NAV_ITEMS } from '../../data/studio';
 
 interface Props {
 	theme?: 'dark' | 'light';
@@ -20,6 +20,26 @@ const isCurrent = (href: string) => {
 	data-header
 	data-theme={theme}
 >
+	<div class="site-header__demo-bar" data-theme="dark">
+		<div class="site-header__demo-inner">
+			<span class="site-header__demo-tag">Demo</span>
+			<p class="site-header__demo-text">
+				Página web demo creada por
+				<a
+					class="site-header__demo-link"
+					href={AGENCY.url}
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label={`Visitar ${AGENCY.name} en ${AGENCY.domain} (se abre en una nueva pestaña)`}
+				>
+					<strong>{AGENCY.name}</strong>
+					<span class="site-header__demo-domain">· {AGENCY.domain}</span>
+					<ArrowUpRight size={12} stroke-width={1.5} aria-hidden="true" />
+				</a>
+			</p>
+		</div>
+	</div>
+
 	<div class="site-header__inner">
 		<a
 			class="site-header__brand"
@@ -117,7 +137,18 @@ const isCurrent = (href: string) => {
 				<span>Reservar cita</span>
 				<ArrowUpRight size={15} stroke-width={1.25} aria-hidden="true" />
 			</a>
-			<p class="mobile-drawer__note">{BRAND.demoNotice}</p>
+			<p class="mobile-drawer__note">
+				Página web demo creada por{' '}
+				<a
+					class="mobile-drawer__credit"
+					href={AGENCY.url}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{AGENCY.name} ({AGENCY.domain})
+					<ArrowUpRight size={12} stroke-width={1.4} aria-hidden="true" />
+				</a>
+			</p>
 		</div>
 	</div>
 </div>
@@ -150,12 +181,82 @@ const isCurrent = (href: string) => {
 		border-bottom-color: var(--rule-on-dark);
 	}
 
+	.site-header__demo-bar {
+		background-color: #191817;
+		color: var(--color-ink-on-dark-muted);
+		border-bottom: 1px solid var(--rule-on-dark);
+	}
+
+	.site-header__demo-inner {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.6rem;
+		min-height: var(--demo-bar-height);
+		padding: 0.35rem var(--gutter);
+		max-width: 1680px;
+		margin-inline: auto;
+	}
+
+	.site-header__demo-tag {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.1rem 0.45rem;
+		border: 1px solid rgba(248, 247, 244, 0.25);
+		font-size: 0.625rem;
+		font-weight: 500;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-paper);
+		line-height: 1.4;
+		flex-shrink: 0;
+	}
+
+	.site-header__demo-text {
+		display: inline-flex;
+		align-items: center;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.35rem;
+		font-size: 0.6875rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		line-height: 1.35;
+	}
+
+	.site-header__demo-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		color: var(--color-paper);
+		border-bottom: 1px solid rgba(248, 247, 244, 0.42);
+		padding-bottom: 0.05rem;
+		transition:
+			opacity var(--duration-fast) var(--ease-editorial),
+			border-color var(--duration-fast) var(--ease-editorial);
+	}
+
+	.site-header__demo-link strong {
+		font-weight: 500;
+	}
+
+	.site-header__demo-domain {
+		color: var(--color-stone);
+		font-weight: 400;
+	}
+
+	.site-header__demo-link:hover,
+	.site-header__demo-link:focus-visible {
+		opacity: 0.8;
+		border-bottom-color: var(--color-paper);
+	}
+
 	.site-header__inner {
 		display: grid;
 		grid-template-columns: auto 1fr auto;
 		align-items: center;
 		gap: 1.75rem;
-		min-height: var(--header-height);
+		min-height: var(--nav-height);
 		padding-inline: var(--gutter);
 		max-width: 1680px;
 		margin-inline: auto;
@@ -387,6 +488,21 @@ const isCurrent = (href: string) => {
 		letter-spacing: 0.12em;
 		text-transform: uppercase;
 		color: var(--color-stone);
+		line-height: 1.6;
+	}
+
+	.mobile-drawer__credit {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		color: var(--color-paper);
+		border-bottom: 1px solid var(--rule-on-dark);
+		padding-bottom: 0.08rem;
+	}
+
+	.mobile-drawer__credit:hover,
+	.mobile-drawer__credit:focus-visible {
+		border-bottom-color: var(--color-paper);
 	}
 
 	@media (max-width: 1140px) {
@@ -406,6 +522,16 @@ const isCurrent = (href: string) => {
 	@media (max-width: 520px) {
 		.site-header__cta {
 			display: none;
+		}
+
+		.site-header__demo-tag,
+		.site-header__demo-domain {
+			display: none;
+		}
+
+		.site-header__demo-text {
+			font-size: 0.65rem;
+			letter-spacing: 0.1em;
 		}
 	}
 </style>

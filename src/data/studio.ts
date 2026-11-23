@@ -11,12 +11,18 @@ import workLuz from '../images/works/work-luz.webp';
 import workTextura from '../images/works/work-textura.webp';
 import quietBeauty from '../images/philosophy/quiet-beauty.webp';
 
+export const AGENCY = {
+	name: '7DStudio',
+	url: 'https://7dstudio.es',
+	domain: '7dstudio.es',
+} as const;
+
 export const BRAND = {
 	name: 'MARGEN',
 	descriptor: 'HAIR STUDIO',
 	year: 2026,
 	conceptNotice: 'Proyecto conceptual de diseño editorial.',
-	demoNotice: 'Concepto web de demostración',
+	demoNotice: 'Página web demo creada por 7DStudio',
 } as const;
 
 export const NAV_ITEMS = [

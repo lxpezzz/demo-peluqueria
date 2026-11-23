@@ -1,5 +1,6 @@
 ---
-import { BRAND, NAV_ITEMS } from '../../data/studio';
+import { ArrowUpRight } from 'lucide-astro';
+import { AGENCY, BRAND, NAV_ITEMS } from '../../data/studio';
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
@@ -38,7 +39,20 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 			<p class="site-footer__copy">
 				&copy; {BRAND.year} {BRAND.name} — {BRAND.descriptor}. {BRAND.conceptNotice}
 			</p>
-			<p class="site-footer__demo">{BRAND.demoNotice}</p>
+			<p class="site-footer__demo">
+				<span>Página web demo creada por</span>
+				<a
+					class="site-footer__credit-link"
+					href={AGENCY.url}
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label={`Visitar ${AGENCY.name} en ${AGENCY.domain} (se abre en una nueva pestaña)`}
+				>
+					<strong>{AGENCY.name}</strong>
+					<span class="site-footer__credit-domain">({AGENCY.domain})</span>
+					<ArrowUpRight size={13} stroke-width={1.4} aria-hidden="true" />
+				</a>
+			</p>
 		</div>
 	</div>
 </footer>
@@ -122,8 +136,39 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 	}
 
 	.site-footer__demo {
+		display: inline-flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.4rem;
 		text-transform: uppercase;
-		letter-spacing: 0.16em;
+		letter-spacing: 0.14em;
+	}
+
+	.site-footer__credit-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		color: var(--color-paper);
+		border-bottom: 1px solid var(--rule-on-dark);
+		padding-bottom: 0.12rem;
+		transition:
+			opacity var(--duration-fast) var(--ease-editorial),
+			border-color var(--duration-fast) var(--ease-editorial);
+	}
+
+	.site-footer__credit-link strong {
+		font-weight: 500;
+	}
+
+	.site-footer__credit-domain {
+		color: var(--color-stone);
+		font-weight: 400;
+	}
+
+	.site-footer__credit-link:hover,
+	.site-footer__credit-link:focus-visible {
+		opacity: 0.85;
+		border-bottom-color: var(--color-paper);
 	}
 
 	@media (max-width: 768px) {

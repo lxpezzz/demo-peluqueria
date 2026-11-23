@@ -35,7 +35,9 @@
 	--container-max: 1400px;
 	--gutter: clamp(1.25rem, 3.5vw, 3.5rem);
 	--section-pad: clamp(5rem, 9vw, 9.5rem);
-	--header-height: 4.75rem;
+	--demo-bar-height: 2.125rem;
+	--nav-height: 4.5rem;
+	--header-height: calc(var(--demo-bar-height) + var(--nav-height));
 
 	/* Motion */
 	--ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
